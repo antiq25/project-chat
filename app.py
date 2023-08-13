@@ -9,7 +9,7 @@ import os
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
-CORS(app)
+CORS(app)  # Handle CORS
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///chat.db'
 db = SQLAlchemy(app)
@@ -20,6 +20,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 online_users = {}
+
   # Required for tracking online users
 
 
@@ -151,8 +152,6 @@ def init_db():
                 user = User(username=user_data['username'], password=hashed_pwd)
                 db.session.add(user)
         db.session.commit()
-
-# [ ... ] your routes and socket events
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
