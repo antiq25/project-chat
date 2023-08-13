@@ -65,7 +65,7 @@
 
     <script>
         // 1. Initialize the socket first
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        var socket = io.connect('https://' + document.domain + ':' + location.port);
 
         // 2. Then, listen to events using the socket
         socket.on('broadcast_message', function (data) {
