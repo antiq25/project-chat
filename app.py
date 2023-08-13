@@ -13,7 +13,7 @@ CORS(app)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///chat.db'
 db = SQLAlchemy(app)
-socketio = SocketIO(app, cors_allowed_origins="*")  # * allows all origins
+socketio = SocketIO(app, async_mode='gevent', cors_allowed_origins="*")
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -96,29 +96,11 @@ def login():
 
 
 @socketio.on('connect')
-def user_connected(namespace=None):
-    user = get_current_user()
-    if user:
-        online_users.add(user.username)
-        emit('update_user_list', {'users': list(online_users)}, broadcast=True)
-
-@socketio.on('disconnect')
-def user_disconnected():
-    user = get_current_user()
-    if user:
-        online_users.discard(user.username)
-        emit('update_user_list', {'users': list(online_users)}, broadcast=True)
-
-def get_current_user():
-    if 'user_id' in session:
-        return User.query.get(session['user_id'])
-    return None
-
-@socketio.on('connect')
 def user_connected():
-    user = get_current_user() # Assuming you have this function to get the current user
-    online_users[request.sid] = {'display_name': user.display_name or user.username, 'id': user.id}
-    emit('update_user_list', {'users': [user['display_name'] for user in online_users.values()]}, broadcast=True)
+    user = get_current_user()
+    if user:
+        online_users[request.sid] = {'display_name': user.display_name or user.username, 'id': user.id}
+        emit('update_user_list', {'users': [user['display_name'] for user in online_users.values()]}, broadcast=True)
 
 @socketio.on('disconnect')
 def user_disconnected():
@@ -126,47 +108,11 @@ def user_disconnected():
         del online_users[request.sid]
         emit('update_user_list', {'users': [user['display_name'] for user in online_users.values()]}, broadcast=True)
 
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        hashed_password = generate_password_hash(password)
-        existing_user = User.query.filter_by(username=username).first()
-        if existing_user:
-            return 'User already exists!', 400
-        user = User(username=username, password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        session['user_id'] = user.id
-        session['username'] = user.username
-        return redirect(url_for('index'))
-    return render_template('register.html')
-
-
-@app.route('/logout')
-def logout():
-    session.pop('user_id', None)
-    session.pop('username', None)
-    return redirect(url_for('login'))
-
-
-@app.route('/')
-def index():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    user = User.query.get(session['user_id'])
-    messages = Message.query.all()
-    return render_template('index.html', messages=messages, username=session['username'], current_user=user)
-
-
-
 @socketio.on('send_message')
 def handle_message(data):
     if 'user_id' in session and 'username' in session:
         message = Message(sender_id=session['user_id'], content=data['message'])
-        
+
         db.session.add(message)
         db.session.commit()
         user = User.query.get(session['user_id'])
@@ -179,21 +125,17 @@ def handle_message(data):
         # Construct the message once
         message_payload = {
             'username': session['username'],
-            'display_name': user.display_name or user.username,  # Add this line
+            'display_name': user.display_name or user.username,
             'message': data['message'],
-            'profile_pic': url_for('static', filename=user.profile_pic) if user.profile_pic else url_for('static', filename='uploads/default_image.png'),  # Default image if profile_pic is None
+            'profile_pic': url_for('static', filename=user.profile_pic) if user.profile_pic else url_for('static', filename='uploads/default_image.png'),
             'user_id': user.id
-            
         }
 
         # Broadcast message
         emit('broadcast_message', message_payload, broadcast=True)
 
 
-
-
-
-if __name__ == '__main__':
+def init_db():
     with app.app_context():
         db.create_all()
 
@@ -210,4 +152,7 @@ if __name__ == '__main__':
                 db.session.add(user)
         db.session.commit()
 
-        socketio.run(app, debug=True)
+# [ ... ] your routes and socket events
+
+if __name__ == '__main__':
+    socketio.run(app, debug=True)
