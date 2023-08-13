@@ -1,0 +1,87 @@
+body {
+    background-color: #000;
+    color: #FFD700;
+    font-family: 'Courier New', monospace;
+    margin: 0;
+    padding: 0;
+}
+
+.container-fluid {
+    padding: 20px;
+}
+
+.card {
+    background-color: #000;
+    border: 1px solid #FFD700;
+    margin-bottom: 20px;
+    box-shadow: none;
+}
+
+.card-header {
+    background-color: #000;
+    color: #FFD700;
+    border-bottom: 1px solid #FFD700;
+}
+
+.card-body {
+    background-color: #000;
+    color: #FFD700;
+    padding: 15px;
+    overflow-y: scroll;
+    max-height: 300px;
+}
+
+.card-footer {
+    background-color: #000;
+    border-top: 1px solid #FFD700;
+    padding: 15px;
+}
+
+.form-control {
+    background-color: #000;
+    border: 1px solid #FFD700;
+    color: #FFD700;
+}
+
+.btn-primary {
+    background-color: #FFD700;
+    border-color: #FFD700;
+    color: #000;
+}
+
+.profile-link {
+    text-decoration: none;
+    color: #FFD700;
+}
+
+.list-group-item {
+    background-color: #000;
+    color: #FFD700;
+    border: none;
+}
+
+.text-muted {
+    color: #555;
+}
+
+.tooltip-inner {
+    background-color: #000;
+    color: #FFD700;
+    border: 1px solid #FFD700;
+}
+
+.tooltip.bs-tooltip-right .arrow::before {
+    border-right-color: #FFD700;
+}
+
+.tooltip.bs-tooltip-left .arrow::before {
+    border-left-color: #FFD700;
+}
+
+.tooltip.bs-tooltip-top .arrow::before {
+    border-top-color: #FFD700;
+}
+
+.tooltip.bs-tooltip-bottom .arrow::before {
+    border-bottom-color: #FFD700;
+}
