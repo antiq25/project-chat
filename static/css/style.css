@@ -1,159 +1,124 @@
-/* Base Styles */
+@import '/static/css/animate.css/source/animate.css';
 
-body, html {
-  height: 100%;
-  font-family: 'Elkab';
-  font-feature-settings: "kern";
-  font-kerning: normal; 
-  font-size: 16px;
-  background-color: #000;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('https://64.media.tumblr.com/579cdff88c9bbf88b4ee6d557b6b9a6b/836cfbf2b8ce5cb7-0a/s500x750/6bc144ce06a064377de0d675dab45fd9e38d0d5b.gifv');
-  background-size: cover;
-  color: #00ff00;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  height: 100vh;
+body,
+html {
+    height: 100vh;
+    color: black !important;    
+
 }
+/* Build base of body */
+
+/* Create container height and blur it  */
+.container-fluid {
+    height: 100%;
+    backdrop-filter: blur(10px);
+    padding: 40px;
+}
+
+
+/* Create a row and make it full height */
+.row {
+    height: 100%;
+}
+
+/* Same with card here */
+.card {
+    height: 100%;
+    overflow: hidden;
+    margin-right: 20px;
+    /* Add some spacing between the chatbox and the online users panel */
+}
+
+/* ------------------------------------------------------ CHATBOX, < --- this is so that the chat doesnt expand when typing  */
+#chatbox {
+    margin: 0 auto;
+    width: 100%;
+    overflow-y: scroll;
+    height: 400px;
+    padding: 10px;
+    background-color: #fff;
+    color: black;
+}
+
+#chatbox p {
+    margin: 0;
+    padding: 0;
+}
+
+#chatbox p span {
+    color: #000;
+}
+
+#chatbox p span.username {
+    font-weight: bold;
+}
+
+
+.input-group {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+/* End sizing  */
+
+
 
 .container-fluid {
-  height: 100%;
-  backdrop-filter: blur(10px);  
-  padding: 40px;
+    animation: fadeIn 1s; 
+    animation-fill-mode: forwards;
+
 }
 
-.row {
-  height: 100%;
+.receiverMessage{
+    animation: fadeIn 1s;
+    animation-fill-mode: forwards;
+    
 }
 
-/* Glassmorphism Styles */
+.senderMessage{
+    animation: fadeIn 1s;
+    animation-fill-mode: forwards;
+}   
+
+/*  */
 
 .card {
-  background: rgba( 255, 255, 255, 0.1 );
-  border-radius: 12px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  transition: all 0.3s ease-in-out;
-  height: 100%;
-  overflow: hidden;
-  margin-right: 20px; /* Add some spacing between the chatbox and the online users panel */
+    animation: fadeIn 1s; 
+    animation-fill-mode: forwards;
 }
 
-.card:last-child {
-    margin-right: 0;
+.gradient5 {
+    background: #00c6ff;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #0072ff, #00c6ff);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #0072ff, #00c6ff);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
-.card:hover {
-  transform: scale(1.02);
+.graddy6 {
+    background: linear-gradient(45deg, #485563, #29323c, rgb(255, 255, 255)) !important;
+    background-size: 400% 400%;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    
 }
 
-.card-header, .card-footer {
-  width: 100%;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85))
+.grad2 {
+    background: linear-gradient(45deg, rgba(131, 164, 255, 0.4), rgba(182, 251, 255, 0.1)) !important;
+    background-size: 400% 400%;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.27);
+        backdrop-filter: blur(4px);
 }
 
-.card-body {
-  position: relative;
-  overflow-y: auto;
-}
+/* glassmorphism */
 
-#chatbox {
-  padding: 15px;
-}
-
-.d-flex.align-items-start {
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-      opacity: 0;
-      transform: translateY(10px);
-  }
-  to {
-      opacity: 1;
-      transform: translateY(0);
-  }
-}
-
-.profile-link {
-  text-decoration: none;
-  color: #00ff00;
-  transition: color 0.3s ease-in-out;
-}
-
-.profile-link:hover {
-  color: #00cc00;
-}
-
-.rounded-circle {
-    transition: transform 0.3s ease-in-out;
-}
-
-.rounded-circle:hover {
-  transform: scale(1.1);
-}
-
-input.form-control {
-  background: rgba( 255, 255, 255, 0.1 );
-  border-radius: 8px; /* Not too rounded */
-  padding: 10px 15px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #00ff00;
-  font-size: 16px;
-  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-input.form-control::placeholder {
-  color: rgba(0, 255, 0, 0.6);
-}
-
-input.form-control:focus {
-  background: rgba( 255, 255, 255, 0.1 );
-  color: white; 
-  border-color: #00cc00;
-  box-shadow: 0 0 0 0.2rem rgba(0, 255, 0, 0.25);
-}
-
-
-.btn-primary {
-  background-color: rgba(0, 255, 0, 0.5);
-  border-color: #00cc00;
-  color: #000;
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-}
-
-.btn-primary:hover {
-  background-color: #00cc00;
-  border-color: #00b300;
-  color: #000;
-}
-
-
-.list-group-item {
-  padding: 8px 12px;
-  background: rgba( 255, 255, 255, 0.1 );
-
-  font-size: 14px;  /* Smaller text for online users */
-}
-
-.list-group-item:hover {
-  background: rgba( 0, 255, 0, 0.5 );
-  color: #000;
-}
-
-/* create custom nice scroll bar */
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-
-
-/* Responsive */
-
-@media (max-width: 768px) {
-  .card {
-      margin-bottom: 20px;
-  }
+.glassmorph {
+    /* add glassmorphism styles */
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
 }
