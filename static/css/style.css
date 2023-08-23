@@ -2,18 +2,19 @@
 
 body,
 html {
+    width: 100%;
     height: 100vh;
-    color: black !important;    
-
+    color: black !important;
 }
-/* Build base of body */
+
+
 
 /* Create container height and blur it  */
 .container-fluid {
     height: 100%;
     backdrop-filter: blur(10px);
-    padding: 40px;
 }
+
 
 
 /* Create a row and make it full height */
@@ -25,7 +26,6 @@ html {
 .card {
     height: 100%;
     overflow: hidden;
-    margin-right: 20px;
     /* Add some spacing between the chatbox and the online users panel */
 }
 
@@ -35,10 +35,11 @@ html {
     width: 100%;
     overflow-y: scroll;
     height: 400px;
-    padding: 10px;
     background-color: #fff;
     color: black;
+    padding: 0;
 }
+/*  */
 
 #chatbox p {
     margin: 0;
@@ -60,33 +61,38 @@ html {
     border-radius: 5px;
     margin-top: 10px;
 }
+
 /* End sizing  */
 
 
 
 .container-fluid {
-    animation: fadeIn 1s; 
+    animation: fadeIn 1s;
     animation-fill-mode: forwards;
 
 }
 
-.receiverMessage{
+.receiverMessage {
     animation: fadeIn 1s;
     animation-fill-mode: forwards;
-    
+
 }
 
-.senderMessage{
+.senderMessage {
     animation: fadeIn 1s;
     animation-fill-mode: forwards;
-}   
+}
 
-/*  */
+
 
 .card {
-    animation: fadeIn 1s; 
+    animation: fadeIn 1s;
     animation-fill-mode: forwards;
 }
+
+/* Remind me to explain to you about how this works ^^^  */
+
+/* Styling starts here  */
 
 .gradient5 {
     background: #00c6ff;
@@ -101,14 +107,14 @@ html {
     background: linear-gradient(45deg, #485563, #29323c, rgb(255, 255, 255)) !important;
     background-size: 400% 400%;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-    
+
 }
 
 .grad2 {
     background: linear-gradient(45deg, rgba(131, 164, 255, 0.4), rgba(182, 251, 255, 0.1)) !important;
     background-size: 400% 400%;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.27);
-        backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
 }
 
 /* glassmorphism */
@@ -121,4 +127,8 @@ html {
     -webkit-backdrop-filter: blur(4px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
+
+}
+.hawk {
+    background: linear-gradient(45deg, #2980b9, #2c3e50);
 }

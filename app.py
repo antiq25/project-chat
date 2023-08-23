@@ -107,9 +107,10 @@ def logout():
 def index():
     if "user_id" not in session:
         return redirect(url_for("login"))
-    current_user = User.query.get(session["user_id"])  # Fetch the current user from the database
+    current_user = User.query.get(session["user_id"])
     messages = Message.query.all()
-    return render_template("index.html", messages=messages, username=session["username"], current_user=current_user)
+    users_online_list = [User.query.get(user["id"]) for user in online_users.values()]
+    return render_template("index.html", messages=messages, username=session["username"], current_user=current_user, users_online=users_online_list)
 
 
 def get_current_user():
@@ -124,13 +125,15 @@ def user_connected():
         online_users[request.sid] = {
             "display_name": user.display_name or user.username,
             "id": user.id,
+            "profile_pic": url_for("static", filename=user.profile_pic) if user.profile_pic else url_for("static", filename="uploads/default_image.webp")
         }
         emit("user_joined", {"display_name": user.display_name or user.username}, broadcast=True)
         emit(
             "update_user_list",
-            {"users": [user["display_name"] for user in online_users.values()]},
+            {"users": list(online_users.values())},
             broadcast=True,
         )
+
 
 @socketio.on("disconnect")
 def user_disconnected():

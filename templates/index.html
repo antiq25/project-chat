@@ -4,17 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   <!-- this right here is bootstrap , and it balances the sizing across devices-->
     <title>Chat Application</title>
-<link rel="stylesheet" href="../static/css/bootstrap.min.css" />
+    <!--  -->
+<link rel="stylesheet" href="../static/css/bootstrap.min.css" />     
+<!-- The order in which these stylesheets come into the DOM matter. Boostrap is always first  -->
 <link rel="stylesheet" href="../static/css/style.css" />
 <link rel="stylesheet" href="../static/css/animate.css/source/animate.css"/>
 </head>
-    <body onload="document.getElementById('message').focus(); scrollBottom();">
-          <h1 class="animate__animated animate__fadeIn">Chat App</h1>
-          <span> Send the iraqi back</span>
-
-    <div class="container-fluid  shadow-lg">
+    <body onload="document.getElementById('message').focus(); scrollBottom();">  <!--- This makes it so that the page loads AT Message and then focuses the message-->
+        <!--  -->
+          <h1 class="animate__animated animate__fadeIn"> eclectiq chat</h1>
+    <div class="container-fluid shadow-lg">
         <div class="row justify-content-center ">
             <div class="col-lg-8 col-md-7 col-sm-12">
                 <div class="card grad2 text-white shadow-lg">
@@ -22,25 +23,30 @@
                         the sp0t - {{ current_user.display_name or current_user.username }}
                         <a href="/logout" class="btn float-end hover">Logout</a>
                     </div>
-                    <div class="card-body" id="chatbox">
-                        {% for message in messages %}
-                        <div class="d-flex align-items-start mb-2">
-                            <a href="{{ url_for('user_profile', user_id=message.sender_id) }}" class="profile-link me-2"
-                                title="View profile" data-bs-toggle="tooltip" data-bs-placement="right"
-                                data-bs-html="true"
-                                data-bs-content="<img src='{{ url_for('static', filename=message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.webp') }}' width='50'><br>{{ message.sender.username }}">
-                                <img src="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.webp')) }}"
-                                    alt="{{ message.sender.username }}" width="30" class="rounded-circle">
-                            </a>
-                            <div class="receiverMessage" onload="fadeIn()">
-                                <strong><a href="{{ url_for('user_profile', user_id=message.sender_id) }}"
-                                        class="profile-link">{{ message.sender.display_name or message.sender.username
-                                        }}</a></strong>:
-                                {{ message.content }}
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
+                    <div class="card-body " id="chatbox">
+       {% for message in messages %}
+    <div class="d-flex align-items-start mb-2">
+        <a href="{{ url_for('user_profile', user_id=message.sender_id) }}" class="profile-link me-2"
+            title="View profile" data-bs-toggle="tooltip" data-bs-placement="right"
+            data-bs-html="true"
+            data-bs-content="<img src='{{ url_for('static', filename=message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.webp') }}' width='50'><br>{{ message.sender.username }}">
+            <img src="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.webp')) }}"
+                alt="{{ (message.sender.display_name if message.sender.display_name else 'Default User') }}" width="30" class="rounded-circle">
+        </a>
+
+        <!--  -->
+
+    <div class="receiverMessage" id="receiverMessage">
+            <strong><a href="{{ url_for('user_profile', user_id=message.sender_id) }}"
+                    class="profile-link">{{ message.sender.display_name or message.sender.username
+                    }}</a></strong>:
+            {{ message.content }}
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+                    <!--  -->
                     <div class="card-footer mb-2">
                         <div class="input-group">
                             <input type="text" class="form-control" id="message" placeholder="Enter your message"
@@ -54,26 +60,29 @@
                 </div>
             </div>
             <div class="col-lg-2 col-md-3 col-sm-12">
-                <div class="card">
-                    <div class="card-header">Online Users</div>
-                    <ul class="list-group list-group-flush" id="online-users"></ul>
-                </div>
-            </div>
-        </div>
+<div class="card">
+    <div class="card-header">Online Users</div>
+    <ul class="list-group list-group-flush" id="online-users">
+        {% for user in users_online %}
+            <li class="list-group-item">
+                <img src="{{ url_for('static', filename=(user.profile_pic if user.profile_pic else 'uploads/default_image.webp')) }}"
+                    alt="{{ (user.display_name if user.display_name else 'Default User') }}" width="30" class="rounded-circle">
+                <a href="{{ url_for('user_profile', user_id=user.id) }}" class="profile-link">{{ user.display_name or user.username }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
     </div>
     <script>
-    function fadein() {
+    function fadeIn() {
         const receiverMessage = document.getElementById("receiverMessage");
-        receiverMessage.dataset("animate__animated", "animate__fadeIn");  
+        receiverMessage.classList.add("animate__animated", "animate__fadeIn");  
     }
-    
+    fadeIn()
     </script>
-    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
-<script src="../static/js/socket.js"></script>
-<script src="../static/js/jquery.js"></script>
 <script src="../static/js/bootstrap.bundle.min.js"></script>
-
-
+<script src="../static/js/jquery.js"></script>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<script src="../static/js/socket.js"></script>
 </body>
-
 </html>
