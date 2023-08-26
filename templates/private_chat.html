@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Private Chat with {{ receiver.username }}</title>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+
+
+    <!-- give -->
+</head>
+<body>
+    <h2>Welcome {{ current_user.username }}</h2>
+    <div>
+        <h3>Private Messages with {{ receiver.username }}:</h3>
+        
+        <div id="private-messages" class="bg-black card">
+            <ul>
+                {% for message in private_messages %}
+                <li>
+                    {% if message.profile_pic %}
+                    <img src="{{ message.profile_pic }}" alt="Profile Picture" width="30" height="30">
+                    {% endif %}
+                    <strong>{{ message.display_name }}</strong>: {{ message.content }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        
+    </div>
+    <form id="private-chat-form">
+        <input type="text" id="private-message-input" placeholder="Type your message">
+        <button type="submit">Send</button>
+    </form>
+    <a href="/">Back to Global Chat</a>
+    <a href="/logout">Logout</a>
+
+<!-- ... rest of the code -->
+
+<script>
+    const socket = io.connect(location.origin);
+
+    socket.on("connect", () => {
+        console.log("Connected to the server");
+        socket.emit("join", { user_id: "{{ current_user.name }}" });
+    });
+
+
+    const privateMessageForm = document.getElementById("private-chat-form");
+    const privateMessageInput = document.getElementById("private-message-input");
+    const privateMessagesList = document.getElementById("private-messages");
+    const messageElement = document.createElement("li");
+
+
+    privateMessageForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const message = privateMessageInput.value.trim();
+        if (message) {
+            // Add the message to the sender's chat window
+            const messageElement = document.createElement("li");
+            messageElement.innerHTML = `<strong>Me</strong>: ${message}`;  // 'Me' to signify that the message is from the sender
+            privateMessagesList.appendChild(messageElement);
+    
+            // Emit the message to the server
+            socket.emit("send_private_message", { 
+                sender_id: "{{ current_user.id }}",
+                receiver_id: "{{ receiver.id }}",
+                message 
+            });
+            privateMessageInput.value = "";
+        }
+    });
+    
+    
+    socket.on('private_message', function(data) {
+        const messageElement = document.createElement("li");
+        messageElement.innerHTML = `<strong>${data.display_name || "Me"}</strong>: ${data.message}`;
+        document.querySelector("#private-messages ul").appendChild(messageElement);
+    });
+    
+    
+
+    socket.on("joined_room", (data) => {
+        console.log(`Joined room ${data.room}`);
+    });
+
+    socket.on("left_room", (data) => {
+        console.log(`Left room ${data.room}`);
+    });
+</script>
+
+</body>
+</html>

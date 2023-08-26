@@ -64,6 +64,11 @@
     <div class="card-header">Online Users</div>
     <ul class="list-group list-group-flush" id="online-users">
         {% for user in users_online %}
+        <li>
+            <a href="{{ url_for('private_chat', receiver_id=user.id) }}">
+                Chat with {{ user.username }}
+            </a>
+        </li>
             <li class="list-group-item">
                 <img src="{{ url_for('static', filename=(user.profile_pic if user.profile_pic else 'uploads/default_image.webp')) }}"
                     alt="{{ (user.display_name if user.display_name else 'Default User') }}" width="30" class="rounded-circle">
@@ -73,13 +78,6 @@
     </ul>
 </div>
     </div>
-    <script>
-    function fadeIn() {
-        const receiverMessage = document.getElementById("receiverMessage");
-        receiverMessage.classList.add("animate__animated", "animate__fadeIn");  
-    }
-    fadeIn()
-    </script>
 <script src="../static/js/bootstrap.bundle.min.js"></script>
 <script src="../static/js/jquery.js"></script>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>

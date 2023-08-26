@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room, rooms, close_room
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -8,13 +8,13 @@ from flask_cors import CORS
 import os
 
 app = Flask(__name__)
-#app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
 CORS(app)
 app.config["SECRET_KEY"] = os.urandom(24)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///chat.db"
 db = SQLAlchemy(app)
 socketio = SocketIO(app)
-#socketio = SocketIO(app, async_mode="gevent", cors_allowed_origins="*")
+socketio = SocketIO(app, async_mode="gevent", cors_allowed_origins="*")
 
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -28,14 +28,16 @@ class User(db.Model):
     display_name = db.Column(db.String(80), nullable=True)
     profile_pic = db.Column(db.String(120), nullable=True)  # Path to the profile picture
     password = db.Column(db.String(120), nullable=False)
-    messages = db.relationship("Message", back_populates="sender")
+    sent_messages = db.relationship("Message", backref="sender", foreign_keys="Message.sender_id")
+    received_messages = db.relationship("Message", backref="receiver", foreign_keys="Message.receiver_id")
+
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     content = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, server_default=db.func.now())
-    sender = db.relationship("User", back_populates="messages")
+    receiver_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -108,9 +110,48 @@ def index():
     if "user_id" not in session:
         return redirect(url_for("login"))
     current_user = User.query.get(session["user_id"])
-    messages = Message.query.all()
     users_online_list = [User.query.get(user["id"]) for user in online_users.values()]
+    messages = Message.query.filter(Message.receiver_id == None).all()
+
     return render_template("index.html", messages=messages, username=session["username"], current_user=current_user, users_online=users_online_list)
+
+
+@socketio.on("send_private_message")
+def handle_private_message(data):
+    sender = User.query.get(session["user_id"])  # Fetch sender details
+    receiver_id = data["receiver_id"]
+    content = data["message"]
+    
+    private_message = Message(sender_id=sender.id, receiver_id=receiver_id, content=content)
+    db.session.add(private_message)
+    db.session.commit()
+    
+    emit("private_message", {
+        "from": sender.id,
+        "display_name": sender.display_name or sender.username,
+        "message": content
+    }, room=receiver_id)
+
+
+
+
+
+@app.route("/private/<int:receiver_id>")
+def private_chat(receiver_id):
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("login"))
+    
+    receiver = User.query.get(receiver_id)
+    if not receiver:
+        return "User not found", 404
+
+    private_messages = Message.query.filter(
+        (Message.sender_id == user.id) & (Message.receiver_id == receiver_id) |
+        (Message.sender_id == receiver_id) & (Message.receiver_id == user.id)
+    ).all()
+
+    return render_template("private_chat.html", private_messages=private_messages, current_user=user, receiver=receiver)
 
 
 def get_current_user():
@@ -150,7 +191,6 @@ def user_disconnected():
             broadcast=True,
         )
 
-
 @socketio.on("send_message")
 def handle_message(data):
     if "user_id" in session and "username" in session:
@@ -161,16 +201,18 @@ def handle_message(data):
         if user is None:
             print(f"No user found with ID: {session['user_id']}")
             return
-        message_payload = {
-            "username": session["username"],
-            "display_name": user.display_name or user.username,
-            "message": data["message"],
-            "profile_pic": url_for("static", filename=user.profile_pic)
-            if user.profile_pic
-            else url_for("static", filename="uploads/default_image.webp"),
-            "user_id": user.id,
-        }
-        emit("broadcast_message", message_payload, broadcast=True)
+        if not message.receiver_id:  # Ensure it's a global message
+            message_payload = {
+                "username": session["username"],
+                "display_name": user.display_name or user.username,
+                "message": data["message"],
+                "profile_pic": url_for("static", filename=user.profile_pic)
+                if user.profile_pic
+                else url_for("static", filename="uploads/default_image.webp"),
+                "user_id": user.id,
+            }
+            emit("broadcast_message", message_payload, broadcast=True)
+
 
 
 
