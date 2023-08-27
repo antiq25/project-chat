@@ -8,12 +8,12 @@ from flask_cors import CORS
 import os
 
 app = Flask(__name__)
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1) # This a production level server 
 CORS(app)
 app.config["SECRET_KEY"] = os.urandom(24)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///chat.db"
 db = SQLAlchemy(app)
-socketio = SocketIO(app)
+#socketio = SocketIO(app)
 socketio = SocketIO(app, async_mode="gevent", cors_allowed_origins="*")
 
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
@@ -133,11 +133,10 @@ def handle_private_message(data):
 
     # Emit to sender (the current user)
     emit("private_message", {
-        "from": sender.id,
+        "from": sender.id,                                                            
         "display_name": sender.username,
         "message": content
     }, room=request.sid)  # request.sid is the current user's socket session id
-
 
 
 @socketio.on("join")
