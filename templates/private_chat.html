@@ -2,7 +2,9 @@
 <html>
 <head>
     <title>Private Chat with {{ receiver.username }}</title>
-    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" crossorigin="anonymous"></script>
 
 
     <!-- give -->
@@ -11,8 +13,20 @@
     <h2>Welcome {{ current_user.username }}</h2>
     <div>
         <h3>Private Messages with {{ receiver.username }}:</h3>
-        
-        <div id="private-messages" class="bg-black card">
+
+        <div class="row-cols-2">
+            <div class="container">
+                <div class="chatbox">
+                    <div id="private-messages" class="card gradient">
+        </div>
+    
+
+        </div>
+  
+
+            </div>
+
+        </div>
             <ul>
                 {% for message in private_messages %}
                 <li>
@@ -37,55 +51,43 @@
 <!-- ... rest of the code -->
 
 <script>
-    const socket = io.connect(location.origin);
+const socket = io.connect(location.origin);
 
-    socket.on("connect", () => {
-        console.log("Connected to the server");
-        socket.emit("join", { user_id: "{{ current_user.name }}" });
-    });
+socket.on("connect", () => {
+    console.log("Connected to the server");
+    socket.emit("join", { user_id: "{{ current_user.id }}" });  // Make sure this ID matches with the server-side room ID
+});
 
+const privateMessageForm = document.getElementById("private-chat-form");
+const privateMessageInput = document.getElementById("private-message-input");
+const privateMessagesList = document.getElementById("private-messages");
 
-    const privateMessageForm = document.getElementById("private-chat-form");
-    const privateMessageInput = document.getElementById("private-message-input");
-    const privateMessagesList = document.getElementById("private-messages");
+privateMessageForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const message = privateMessageInput.value.trim();
+    if (message) {
+        // Debug log
+        console.log("Sending message:", message);
+        
+        // Emit the message to the server
+        socket.emit("send_private_message", { 
+            sender_id: "{{ current_user.id }}",
+            receiver_id: "{{ receiver.id }}",
+            message 
+        });
+        privateMessageInput.value = "";
+    }
+});
+
+socket.on('private_message', function(data) {
+    // Debug log
+    console.log("Received private message:", data);
+    
+    // Append the received message
     const messageElement = document.createElement("li");
-
-
-    privateMessageForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const message = privateMessageInput.value.trim();
-        if (message) {
-            // Add the message to the sender's chat window
-            const messageElement = document.createElement("li");
-            messageElement.innerHTML = `<strong>Me</strong>: ${message}`;  // 'Me' to signify that the message is from the sender
-            privateMessagesList.appendChild(messageElement);
-    
-            // Emit the message to the server
-            socket.emit("send_private_message", { 
-                sender_id: "{{ current_user.id }}",
-                receiver_id: "{{ receiver.id }}",
-                message 
-            });
-            privateMessageInput.value = "";
-        }
-    });
-    
-    
-    socket.on('private_message', function(data) {
-        const messageElement = document.createElement("li");
-        messageElement.innerHTML = `<strong>${data.display_name || "Me"}</strong>: ${data.message}`;
-        document.querySelector("#private-messages ul").appendChild(messageElement);
-    });
-    
-    
-
-    socket.on("joined_room", (data) => {
-        console.log(`Joined room ${data.room}`);
-    });
-
-    socket.on("left_room", (data) => {
-        console.log(`Left room ${data.room}`);
-    });
+    messageElement.innerHTML = `<strong>${data.display_name || data.from}</strong>: ${data.message}`;
+    privateMessagesList.appendChild(messageElement);
+});
 </script>
 
 </body>

@@ -31,7 +31,6 @@ class User(db.Model):
     sent_messages = db.relationship("Message", backref="sender", foreign_keys="Message.sender_id")
     received_messages = db.relationship("Message", backref="receiver", foreign_keys="Message.receiver_id")
 
-
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -115,25 +114,36 @@ def index():
 
     return render_template("index.html", messages=messages, username=session["username"], current_user=current_user, users_online=users_online_list)
 
-
 @socketio.on("send_private_message")
 def handle_private_message(data):
-    sender = User.query.get(session["user_id"])  # Fetch sender details
+    sender = User.query.get(session["user_id"])
     receiver_id = data["receiver_id"]
     content = data["message"]
-    
+
     private_message = Message(sender_id=sender.id, receiver_id=receiver_id, content=content)
     db.session.add(private_message)
     db.session.commit()
-    
+
+    # Emit to receiver
     emit("private_message", {
         "from": sender.id,
-        "display_name": sender.display_name or sender.username,
+        "display_name": sender.username,
         "message": content
-    }, room=receiver_id)
+    }, room=str(receiver_id))
+
+    # Emit to sender (the current user)
+    emit("private_message", {
+        "from": sender.id,
+        "display_name": sender.username,
+        "message": content
+    }, room=request.sid)  # request.sid is the current user's socket session id
 
 
 
+@socketio.on("join")
+def on_join(data):
+    user_id = data["user_id"]
+    join_room(str(user_id))
 
 
 @app.route("/private/<int:receiver_id>")
