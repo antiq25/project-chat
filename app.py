@@ -223,8 +223,6 @@ def handle_message(data):
             emit("broadcast_message", message_payload, broadcast=True)
 
 
-
-
 @app.cli.command()
 def init_db():
     with app.app_context():

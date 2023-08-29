@@ -1,4 +1,5 @@
 var socket = io.connect();
+
 socket.on('broadcast_message', function (data) {
     var chatbox = document.getElementById('chatbox');
     var displayName = data.display_name || data.username; 
@@ -28,32 +29,35 @@ socket.on('user_left', function (data) {
     chatbox.scrollTop = chatbox.scrollHeight;
 });
 
-socket.on('update_user_list', function (data) {
-    var userList = document.getElementById('online-users');
-    userList.innerHTML = '';
+
+// the current function is rendering w/o the javascript right now , so this is not needed
+// however this mayt change 
+
+// socket.on('update_user_list', function (data) {
+//     var userList = document.getElementById('online-users');
+//     userList.innerHTML = '';
     
-    data.users.forEach(function (userOrDisplayName) {
-        var displayName, profilePicSrc, userId;
+//     data.users.forEach(function (userOrDisplayName) {
+//         var displayName, profilePicSrc, userId;
 
-        // Check if userOrDisplayName is an object (user object)
-        if (typeof userOrDisplayName === 'object') {
-            displayName = userOrDisplayName.display_name || userOrDisplayName.username;
-            profilePicSrc = userOrDisplayName.profile_pic || '../static/uploads/default_image.webp';
-            userId = userOrDisplayName.id;
-        } else { // if it's just a display name string
-            displayName = userOrDisplayName;
-            profilePicSrc = '../static/uploads/default_image.webp'; // Default image
-            userId = ""; // Unknown user ID in this case
-        }
+//         // Check if userOrDisplayName is an object (user object)
+//         if (typeof userOrDisplayName === 'object') {
+//             displayName = userOrDisplayName.display_name || userOrDisplayName.username;
+//             profilePicSrc = userOrDisplayName.profile_pic || '../static/uploads/default_image.webp';
+//             userId = userOrDisplayName.id;
+//         } else { // if it's just a display name string
+//             displayName = userOrDisplayName;
+//             profilePicSrc = '../static/uploads/default_image.webp'; // Default image
+//             userId = ""; // Unknown user ID in this case
+//         }
 
-        userList.innerHTML += `
-            <li class="list-group-item">
-                <img src="${profilePicSrc}" alt="${displayName}" width="30" class="rounded-circle">
-                <a href="/profile/${userId}" class="profile-link">${displayName}</a>
-            </li>`;
-    });
-});
-
+//         userList.innerHTML += `
+//             <li class="list-group-item">
+//                 <img src="${profilePicSrc}" alt="${displayName}" width="30" class="rounded-circle">
+//                 <a href="/profile/${userId}" class="profile-link">${displayName}</a>
+//             </li>`;
+//     });
+// });
 
 function checkKey(event) {
     if (event.keyCode === 13) { 

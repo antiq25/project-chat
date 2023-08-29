@@ -5,6 +5,11 @@ html {
     width: 100%;
     height: 100vh;
     color: black !important;
+    background: rgb(238, 238, 238);
+        background: -moz-linear-gradient(-45deg, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%);
+        background: -webkit-linear-gradient(-45deg, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%);
+        background: linear-gradient(135deg, rgba(238, 238, 238, 1) 0%, rgba(204, 204, 204, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#cccccc', GradientType=1);
 }
 
 
@@ -12,7 +17,6 @@ html {
 /* Create container height and blur it  */
 .container-fluid {
     height: 100%;
-    backdrop-filter: blur(10px);
 }
 
 
@@ -25,6 +29,7 @@ html {
 /* Same with card here */
 .card {
     height: 100%;
+    width: 100%;
     overflow: hidden;
     /* Add some spacing between the chatbox and the online users panel */
 }
@@ -34,11 +39,34 @@ html {
     margin: 0 auto;
     width: 100%;
     overflow-y: scroll;
+    -ms-overflow-style: none;
+
+}
+
+#chatbox::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar for Chrome, Safari and Opera */
+}
+
+#chatbox {
+    margin: 0 auto;
+    width: 100%;
+    overflow-y: scroll;
     height: 400px;
-    background-color: #fff;
     color: black;
+background: #ffffff;
+background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 47%, #ededed 100%);
+background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+background: linear-gradient(to bottom,  #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 );
+background: #ffffff;
+background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 47%, #ededed 100%);
+background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+background: linear-gradient(to bottom,  #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 );
     padding: 0;
 }
+
 /*  */
 
 #chatbox p {
@@ -58,9 +86,9 @@ html {
 .input-group {
     margin-top: 10px;
     padding: 10px;
-    border-radius: 5px;
     margin-top: 10px;
 }
+
 
 /* End sizing  */
 
@@ -129,6 +157,35 @@ html {
     border: 1px solid rgba(255, 255, 255, 0.18);
 
 }
+
 .hawk {
-    background: linear-gradient(45deg, #2980b9, #2c3e50);
+        background-color: #959595;
+        /* IE9, iOS 3.2+ */
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxsaW5lYXJHcmFkaWVudCBpZD0idnNnZyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMCUiIHkyPSIxMDAlIj48c3RvcCBzdG9wLWNvbG9yPSIjODA4MDgwIiBzdG9wLW9wYWNpdHk9IjEiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNhOWE5YTkiIHN0b3Atb3BhY2l0eT0iMSIgb2Zmc2V0PSIxIi8+PC9saW5lYXJHcmFkaWVudD48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI3ZzZ2cpIiAvPjwvc3ZnPg==);
+        background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0, rgb(128, 128, 128)), color-stop(1, rgb(169, 169, 169)));
+        /* Android 2.3 */
+        background-image: -webkit-linear-gradient(top, rgb(128, 128, 128) 0%, rgb(169, 169, 169) 100%);
+        /* IE10+ */
+        background-image: linear-gradient(to bottom, rgb(128, 128, 128) 0%, rgb(169, 169, 169) 100%);
+        background-image: -ms-linear-gradient(top, rgb(128, 128, 128) 0%, rgb(169, 169, 169) 100%);
+    }
+
+.grad4 {
+    background: rgb(8, 55, 126);
+        background: -moz-linear-gradient(-45deg, rgba(8, 55, 126, 1) 0%, rgba(7, 49, 105, 1) 100%);
+        background: -webkit-linear-gradient(-45deg, rgba(8, 55, 126, 1) 0%, rgba(7, 49, 105, 1) 100%);
+        background: linear-gradient(135deg, rgba(8, 55, 126, 1) 0%, rgba(7, 49, 105, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#08377e', endColorstr='#073169', GradientType=1);
+}
+
+.gradi {
+    color:white;
+ 
+
+}
+
+.gradi:hover {
+    color: #ffffff;
+    text-shadow: 4, 2, 2, 4 #090909;
+    animation: bounce 1s;
 }
