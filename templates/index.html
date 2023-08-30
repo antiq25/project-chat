@@ -22,7 +22,6 @@
 
 
 </head>
-
 <body onload="document.getElementById('message').focus(); scrollBottom();">
     <!--- This makes it so that the page loads AT Message and then focuses the message-->
     <!--  -->
@@ -78,19 +77,19 @@
             <div class="col-lg-2 col-md-3 col-sm-12">
                 <div class="card shadow-lg text-white">
                     <div class="card-header grad4 text-white">Online Users</div>
-                    <ul class="list-group list-group-flush" id="users_online">
+                    <ul class="list-group list-group-flush" id="update_user_list">
                         {% for user in users_online %}
+                        <ul class="list-group list-group-flush" id="update_user_list">
+
                         <li>
                             <a href="{{ url_for('private_chat', receiver_id=user.id) }}">
                                 Chat with {{ user.username }}
                             </a>
                         </li>
-                        <li class="list-group-item">
-                            <img src="{{ url_for('static', filename=(user.profile_pic if user.profile_pic else 'uploads/default_image.webp')) }}"
+                                <img src="{{ url_for('static', filename=(user.profile_pic if user.profile_pic else 'uploads/default_image.webp')) }}"
                                 alt="{{ (user.display_name if user.display_name else 'Default User') }}" width="30"
                                 class="rounded-circle">
-                            <a href="{{ url_for('user_profile', user_id=user.id) }}" class="profile-link">{{
-                                user.display_name or user.username }}</a>
+                            <a href="{{ url_for('user_profile', user_id=user.id) }}" class="profile-link">{{ user.display_name or user.username }}</a>
                         </li>
                         {% endfor %}
                         <!--  no idea why this works but ok  -->
@@ -98,6 +97,7 @@
                 </div>
             </div>
             <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+            <script src="{{ url_for('static', filename='js/users_update.js') }}"></script>
 
 </body>
 

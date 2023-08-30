@@ -2,39 +2,10 @@
 <html>
 <head>
     <title>Register</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    link
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<style>
-    body, html {
-  height: 100%;
-  font-family: 'Elkab';
-  font-feature-settings: "kern";
-  font-kerning: normal; 
-  font-size: 16px;
-  background-color: #000;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('https://64.media.tumblr.com/579cdff88c9bbf88b4ee6d557b6b9a6b/836cfbf2b8ce5cb7-0a/s500x750/6bc144ce06a064377de0d675dab45fd9e38d0d5b.gifv');
-  background-size: cover;
-  color: #00ff00;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  height: 100vh;
-}
 
-
-.card {
-  background: rgba( 255, 255, 255, 0.1 );
-  border-radius: 12px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  transition: all 0.3s ease-in-out;
-  height: 100%;
-  overflow: hidden;
-  margin-right: 20px; /* Add some spacing between the chatbox and the online users panel */
-}
-
-</style>
 <body class="bg-light">
 
 <div class="container mt-5">
@@ -46,10 +17,20 @@
                     <form action="/register" method="post">
                         <div class="mb-3">
                             <label class="form-label">Username</label>
+                            <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="{{ csrf_token() }}"
+                          />
                             <input type="text" class="form-control" name="username" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>
+                            <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="{{ csrf_token() }}"
+                          />
                             <input type="password" class="form-control" name="password" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Register</button>

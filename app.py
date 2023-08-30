@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for, session, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, emit, join_room, leave_room, rooms, close_room
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_cors import CORS
+from flask_wtf import CSRFProtect
+import logging
 import os
 
 app = Flask(__name__)
@@ -13,6 +15,8 @@ CORS(app)
 app.config["SECRET_KEY"] = os.urandom(24)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///chat.db"
 db = SQLAlchemy(app)
+csrf = CSRFProtect(app)
+
 #socketio = SocketIO(app)
 socketio = SocketIO(app, async_mode="gevent", cors_allowed_origins="*")
 
@@ -21,6 +25,11 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
 online_users = {}
+
+logging.basicConfig(filename='app.log', level=logging.INFO)
+app.logger.addHandler(logging.StreamHandler())
+
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,6 +49,20 @@ class Message(db.Model):
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(e):
+    app.logger.error(f"Server error: {e}")
+    return render_template('500.html'), 500
+
+@app.route("/test", methods=["GET"])    
+def test():
+    return render_template("test.html")
+
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
@@ -244,4 +267,3 @@ def init_db():
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
-
