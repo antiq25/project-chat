@@ -59,9 +59,9 @@ def internal_error(e):
     app.logger.error(f"Server error: {e}")
     return render_template('500.html'), 500
 
-@app.route("/test", methods=["GET"])    
+@app.route("/hud/layout_starter", methods=["GET"])    
 def test():
-    return render_template("test.html")
+    return render_template("/hud/layout_starter.html")
 
 
 @app.route("/profile", methods=["GET", "POST"])
