@@ -1,15 +1,16 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Login</title>
-    <link href="../static/css/bootstrap.css" rel="stylesheet" />
-    <script src="../static/js/bootstrap.bundle.min.js"></script>
-  </head>
-  <body class="bg-light">
-    <div class="container-fluid deep-space">
+{% extends 'layout.html' %} 
+{% block content %}
+<body class="">  
+<link rel="stylesheet" type="text/css" href="../static/css/misc.css">
+<div class="d-flex align-content-center">
+  <div class="mx-auto">
+    <div class="text-center">
+      <h1 class="display-1 fadeIn bg-transparent">piss gate</h1>
+      <span class="text-muted">the invocators of the piss doctrine.</span>  
+</div>
+    <div class="container-md mt-5">
       <div class="row justify-content-center">
-        <div class="col">
-          <div class="card blurry-beach">
+          <div class="card">
             <div class="card-header">Login</div>
             <div class="card-body">
               <form action="/login" method="post">
@@ -41,5 +42,5 @@
         </div>
       </div>
     </div>
-  </body>
-</html>
+  </div>  
+ {% endblock %}

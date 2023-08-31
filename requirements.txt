@@ -7,6 +7,7 @@ Flask==2.3.2
 Flask-Cors==4.0.0
 Flask-SocketIO==5.3.5
 Flask-SQLAlchemy==3.0.5
+Flask-WTF==1.1.1
 gevent==23.7.0
 gevent-websocket==0.10.1
 greenlet==2.0.2
@@ -22,5 +23,6 @@ six==1.16.0
 SQLAlchemy==2.0.19
 typing_extensions==4.7.1
 Werkzeug==2.3.6
+WTForms==3.0.1
 zope.event==5.0
 zope.interface==6.0

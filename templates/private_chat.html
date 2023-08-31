@@ -1,94 +1,88 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Private Chat with {{ receiver.username }}</title>
-    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../static/css/style.css">
+{% extends 'layout.html' %}     
+{% block content %} 
+
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" crossorigin="anonymous"></script>
-
-
-    <!-- give -->
-</head>
-<body>
-    <h2>Welcome {{ current_user.username }}</h2>
-    <div>
-        <h3>Private Messages with {{ receiver.username }}:</h3>
-
-        <div class="row-cols-2">
-            <div class="container">
-                <div class="chatbox">
-                    <div id="private-messages" class="card gradient">
-        </div>
-    
-
-        </div>
-  
-
-            </div>
-
-        </div>
-            <ul>
+    <link rel="stylesheet" type="text/css" href="../static/css/misc.css">
+    <div class="container mt-5">
+        <div class="mt-5">
+            <h3>Private Messages with {{ receiver.username }}:</h3>
+            <div class="shadow-6 p-3 bg-white" style="height: 400px; overflow-y: scroll;" id="private-messages">
                 {% for message in private_messages %}
-                <li>
+                <div class="d-flex align-items-center mb-2">
                     {% if message.profile_pic %}
-                    <img src="{{ message.profile_pic }}" alt="Profile Picture" width="30" height="30">
+                    <img src="{{ message.profile_pic }}" alt="Profile Picture" width="30" height="30" class="rounded-circle me-2">
                     {% endif %}
-                    <strong>{{ message.display_name }}</strong>: {{ message.content }}
-                </li>
+                    <div>
+                        <strong>{{ message.display_name }}</strong>: {{ message.content }}
+                    </div>
+                </div>
                 {% endfor %}
-            </ul>
-        </div>
-        
-        
-    </div>
-    <form id="private-chat-form">
-        <input type="text" id="private-message-input" placeholder="Type your message">
-        <button type="submit">Send</button>
-    </form>
-    <a href="/">Back to Global Chat</a>
-    <a href="/logout">Logout</a>
+            </div>
+            <div class="my-4">
+                <div id="chatbox">
+                <form id="private-chat-form" class="chatbox">
+                    <div class="input-group">
+                        <input type="text" id="private-message-input" placeholder="Type your message" class="form-control" style="resize: none;" rows="1"/>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="text-center">
+                    <a href="/" class="btn btn-secondary mt-4">Back to Global Chat</a>
+                    <a href="/logout" class="btn btn-danger mt-4">Logout</a>
+                </div>
+            </div>
+            </div>
+    <script>
+    const socket = io.connect(location.origin);
+    socket.on("connect", () => {
+        socket.emit("join", { user_id: "{{ current_user.id }}" });
+    });
 
-<!-- ... rest of the code -->
+    const privateMessageForm = document.getElementById("private-chat-form");
+    const privateMessageInput = document.getElementById("private-message-input");
+    const privateMessagesList = document.getElementById("private-messages");
 
-<script>
-const socket = io.connect(location.origin);
+    privateMessageForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const message = privateMessageInput.value.trim();
+        if (message) {
+            socket.emit("send_private_message", { 
+                sender_id: "{{ current_user.id }}",
+                receiver_id: "{{ receiver.id }}",
+                message 
+            });
+            privateMessageInput.value = "";
+        }
+    });
 
-socket.on("connect", () => {
-    console.log("Connected to the server");
-    socket.emit("join", { user_id: "{{ current_user.id }}" });  // Make sure this ID matches with the server-side room ID
-});
+    socket.on('private_message', function(data) {
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("d-flex", "align-items-center", "mb-2");
+        messageElement.innerHTML = `<strong>${data.display_name || data.from}</strong>: ${data.message}`;
+        privateMessagesList.appendChild(messageElement);
+        scrollBottom();
+    });
 
-const privateMessageForm = document.getElementById("private-chat-form");
-const privateMessageInput = document.getElementById("private-message-input");
-const privateMessagesList = document.getElementById("private-messages");
+   function scrollBottom() {
+    const privateMessages = document.getElementById("private-messages");    
+    privateMessages.scrollTop = privateMessages.scrollHeight;
+   }
 
-privateMessageForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const message = privateMessageInput.value.trim();
-    if (message) {
-        // Debug log
-        console.log("Sending message:", message);
-        
-        // Emit the message to the server
-        socket.emit("send_private_message", { 
-            sender_id: "{{ current_user.id }}",
-            receiver_id: "{{ receiver.id }}",
-            message 
-        });
-        privateMessageInput.value = "";
-    }
-});
 
-socket.on('private_message', function(data) {
-    // Debug log
-    console.log("Received private message:", data);
-    
-    // Append the received message
-    const messageElement = document.createElement("li");
-    messageElement.innerHTML = `<strong>${data.display_name || data.from}</strong>: ${data.message}`;
-    privateMessagesList.appendChild(messageElement);
-});
-</script>
+ 
+    window.onload = function() {
+    privateMessageInput.focus();
+    scrollBottom();
+}
 
-</body>
-</html>
+    //  create me a focus when the page loads it is automatically focused
+
+
+
+    </script>       
+   
+
+
+{% endblock %}
