@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, emit, join_room, leave_room, rooms, close_room
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -19,6 +19,7 @@ csrf = CSRFProtect(app)
 
 #socketio = SocketIO(app)
 socketio = SocketIO(app, async_mode="gevent", cors_allowed_origins="*")
+#socketio = SocketIO(app, manage_session=False)
 
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -46,6 +47,18 @@ class Message(db.Model):
     content = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, server_default=db.func.now())
     receiver_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
+    read = db.Column(db.Boolean, default=False)
+
+    
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    message_id = db.Column(db.Integer, db.ForeignKey("message.id"))
+    content = db.Column(db.String(500), nullable=False)
+    timestamp = db.Column(db.DateTime, server_default=db.func.now())
+    read = db.Column(db.Boolean, default=False)
+
+
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -139,13 +152,36 @@ def index():
 
 @socketio.on("send_private_message")
 def handle_private_message(data):
-    sender = User.query.get(session["user_id"])
+    sender = get_current_user()
+    if not sender:
+        return  # or handle the error appropriately
+
     receiver_id = data["receiver_id"]
     content = data["message"]
 
-    private_message = Message(sender_id=sender.id, receiver_id=receiver_id, content=content)
+    # Prevent sending messages to oneself
+    if sender.id == receiver_id:
+        print("A user tried to send a message to themselves.")
+        return
+
+    private_message = Message(sender_id=sender.id, receiver_id=receiver_id, content=content, read=False)
     db.session.add(private_message)
     db.session.commit()
+
+    # Define the notification_message variable
+    notification_message = f"You have a new message from {sender.username}"
+
+    # Add a notification to the database
+    notification = Notification(user_id=receiver_id, message_id=private_message.id, content=notification_message)
+    db.session.add(notification)
+    db.session.commit()
+
+    # Emit a simple notification to update the count on the client side
+    emit("update_notification_count", {}, room=str(receiver_id))
+    
+    # Send detailed real-time notification to receiver
+    emit("display_notification", {"message": notification_message}, room=str(receiver_id))
+    print(f"Notification emitted to {receiver_id} with message: {notification_message}")
 
     # Emit to receiver
     emit("private_message", {
@@ -159,13 +195,72 @@ def handle_private_message(data):
         "from": sender.id,                                                            
         "display_name": sender.username,
         "message": content
-    }, room=request.sid)  # request.sid is the current user's socket session id
+    }, room=request.sid)
+
+
+
+
+@app.route("/unread_messages_count")
+def unread_messages_count():
+    user = get_current_user()
+    if not user:
+        return jsonify({"count": 0})
+    
+    count = Message.query.filter_by(receiver_id=user.id, read=False).count()
+    return jsonify({"count": count})
+
+@app.route("/mark_notification_read/<int:notification_id>", methods=["POST"])
+def mark_notification_read(notification_id):
+    print(f"Attempting to mark notification {notification_id} as read.") 
+
+    notification = Notification.query.get(notification_id)
+    
+    
+    if not notification:
+        print(f"Notification {notification_id} not found.")  # Debugging statement
+        return jsonify({"status": "error", "message": "Notification not found"}), 404
+
+    try:
+        notification.read = True
+        db.session.commit()
+        print(f"Notification {notification_id} marked as read.")  # Debugging statement
+        return jsonify({"status": "success"})
+    except Exception as e:
+        print(f"Error while marking notification {notification_id} as read: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route("/fetch_notifications")
+def fetch_notifications():
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "User not authenticated"}), 401
+
+    notifications = Notification.query.filter_by(user_id=user.id, read=False).all()
+    
+    # If there are no notifications
+    if not notifications:
+        return jsonify({"message": "No unread notifications", "notifications": []})
+    
+    
+
+    # Transform the ORM objects to a list of dictionaries
+    notification_dicts = [{
+        "id": n.id,
+        "content": n.content,
+        "timestamp": n.timestamp.isoformat()
+    } for n in notifications]
+
+    return jsonify({"message": "Unread notifications fetched successfully", "notifications": notification_dicts})
+
+
+
 
 
 @socketio.on("join")
 def on_join(data):
     user_id = data["user_id"]
     join_room(str(user_id))
+
 
 
 @app.route("/private/<int:receiver_id>")
@@ -183,6 +278,11 @@ def private_chat(receiver_id):
         (Message.sender_id == receiver_id) & (Message.receiver_id == user.id)
     ).all()
 
+    unread_messages = Message.query.filter_by(sender_id=receiver_id, receiver_id=user.id, read=False).all()
+    for msg in unread_messages:
+        msg.read = True
+    db.session.commit()
+
     return render_template("private_chat.html", private_messages=private_messages, current_user=user, receiver=receiver)
 
 
@@ -190,6 +290,7 @@ def get_current_user():
     if "user_id" in session:
         return User.query.get(session["user_id"])
     return None
+
 
 @socketio.on("connect")
 def user_connected():

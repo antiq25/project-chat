@@ -1,3 +1,6 @@
 {
-    "path-intellisense.extensionOnImport": true
+    "path-intellisense.extensionOnImport": true,
+    "CodeGPT.model": "gpt-4",
+    "CodeGPT.maxTokens": 4000,
+    "CodeGPT.organizationId": "org-kulsNmsk98i8VzK9s8ENiyGW"
 }
