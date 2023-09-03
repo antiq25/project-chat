@@ -142,13 +142,22 @@ def logout():
 
 @app.route("/")
 def index():
+    user = get_current_user()
+
     if "user_id" not in session:
         return redirect(url_for("login"))
+    
     current_user = User.query.get(session["user_id"])
     users_online_list = [User.query.get(user["id"]) for user in online_users.values()]
     messages = Message.query.filter(Message.receiver_id == None).all()
+    received_messages = Message.query.filter_by(receiver_id=user.id).all()
+    senders = set([msg.sender for msg in received_messages])
 
-    return render_template("index.html", messages=messages, username=session["username"], current_user=current_user, users_online=users_online_list)
+
+    return render_template("index.html", messages=messages, username=session["username"], current_user=current_user, users_online=users_online_list, senders=senders, received_messages=received_messages)
+
+
+
 
 @socketio.on("send_private_message")
 def handle_private_message(data):
@@ -196,6 +205,16 @@ def handle_private_message(data):
         "display_name": sender.username,
         "message": content
     }, room=request.sid)
+
+    # Emit to receiver to update their conversations list
+    emit("update_conversations", {}, room=str(receiver_id))
+
+# Emit to sender (the current user) to update their conversations list
+    emit("update_conversations", {}, room=request.sid)
+
+    emit("update_inbox", {}, room=str(receiver_id))
+
+
 
 
 
@@ -345,6 +364,78 @@ def handle_message(data):
                 "user_id": user.id,
             }
             emit("broadcast_message", message_payload, broadcast=True)
+
+@app.route("/conversations", methods=["GET"])
+def get_conversations():
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "User not authenticated"}), 401
+
+    # Get all the unique users who have messaged the current user
+    senders = db.session.query(Message.sender_id).filter_by(receiver_id=user.id).distinct().all()
+
+    conversations = []
+    for sender_id in senders:
+        sender = User.query.get(sender_id)
+        latest_message = Message.query.filter_by(sender_id=sender_id, receiver_id=user.id).order_by(Message.timestamp.desc()).first()
+        conversations.append({
+            "id": sender.id,
+            "username": sender.username,
+            "latest_message": latest_message.content,
+            "timestamp": latest_message.timestamp.isoformat()
+        })
+
+    return jsonify(conversations)
+
+@app.route("/chat_history/<int:partner_id>", methods=["GET"])
+def chat_history(partner_id):
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "User not authenticated"}), 401
+
+    messages = Message.query.filter(
+        (Message.sender_id == user.id) & (Message.receiver_id == partner_id) |
+        (Message.sender_id == partner_id) & (Message.receiver_id == user.id)
+    ).all()
+
+    chat_history = [{
+        "id": m.id,
+        "username": User.query.get(m.sender_id).username,
+        "content": m.content,
+        "timestamp": m.timestamp.isoformat()
+    } for m in messages]
+
+    return jsonify(chat_history)
+
+@app.route("/inbox_data")
+def inbox_data():
+    user = get_current_user()
+    received_messages = Message.query.filter_by(receiver_id=user.id).all()
+    senders = set([msg.sender for msg in received_messages])
+
+    # Convert the data to a JSON-friendly format
+    inbox_data = {
+        "received_messages": [{"content": msg.content, "timestamp": msg.timestamp.isoformat(), "sender": msg.sender.username} for msg in received_messages],
+        "senders": [{"id": sender.id, "username": sender.username} for sender in senders]
+    }
+
+    return jsonify(inbox_data)
+
+
+
+@app.route("/clear_inbox", methods=["POST"])
+def clear_inbox():
+    user = get_current_user()
+    if not user:
+        return jsonify({"status": "error", "message": "User not authenticated"}), 401
+
+    # Deleting messages where the user is the receiver
+    Message.query.filter_by(receiver_id=user.id).delete()
+    # Deleting notifications for the user
+    Notification.query.filter_by(user_id=user.id).delete()
+    db.session.commit()
+
+    return jsonify({"status": "success", "message": "Inbox cleared successfully"})
 
 
 @app.cli.command()

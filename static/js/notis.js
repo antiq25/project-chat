@@ -1,5 +1,5 @@
 const currentUserId = "{{ current_user }}";
-
+// START NOTIFICATIONS //////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function() {
     fetchAndDisplayUnreadNotifications();
     checkForNewPrivateMessages();
@@ -121,4 +121,69 @@ socket.on('notification', function(data) {
     console.log("Notification data received:", data);
     displayNotificationInUI(data);
 });
+////////////////////////////////////
+// END NOTIFICATIONS ///////////////
 
+/////////////////////////////////////////////////////////////////////////////////////////
+
+// clearing inbox functions
+
+const clearInboxBtn = document.getElementById("clearInboxBtn");
+    
+if (clearInboxBtn) {  // Ensure the button exists
+    clearInboxBtn.addEventListener("click", () => {
+        // Retrieve the CSRF token from the meta tag
+        const csrfMetaTag = document.querySelector('meta[name="csrf-token"]');
+        const csrfToken = csrfMetaTag ? csrfMetaTag.getAttribute('content') : null;
+
+        if (!csrfToken) {
+            console.error("CSRF token not found.");
+            return;
+        }
+        
+        fetch("/clear_inbox", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => {
+                    console.error("Response text:", text);
+                    throw new Error(`Server responded with status ${response.status}: ${text}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === "success") {
+                console.log("Successfully cleared inbox.");
+                window.location.href = "/"; // Redirect to the inbox route
+            } else {
+                console.error("Server responded without success. Full response:", data);
+            }
+        })
+        .catch(error => {
+            console.error("Error clearing inbox:", error);
+        });
+    });
+}
+
+
+// open the modal and refresh the page so the gives the illusion of displaying dynamically.. too lazy to do it the right way
+document.getElementById("openModal").addEventListener("click", function() {
+    sessionStorage.setItem("openModalAfterReload", "true");
+    location.reload();
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    if (sessionStorage.getItem("openModalAfterReload") === "true") {
+        // Open your modal here
+        const inboxModal = new bootstrap.Modal(document.getElementById('inboxModal'));
+        inboxModal.show();
+
+        // Clear the flag so the modal doesn't keep opening on subsequent reloads
+        sessionStorage.removeItem("openModalAfterReload");
+    }
+});
