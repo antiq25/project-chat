@@ -5,7 +5,8 @@ socket.on('update_user_list', function(data) {
 
     users.forEach(user => {
         const li = document.createElement('li');
-        li.classList.add('list-group-item', 'd-flex', 'align-items-center', 'gap-3');
+        li.classList.add('list-group-item');
+        
 
         // Create user image
         const userImage = document.createElement('img');
