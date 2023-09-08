@@ -1,12 +1,10 @@
-{% extends 'layout.html' %}     
-{% block content %} 
 
-    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="../static/css/misc.css">
-    <div class="container mt-5">
-        <div class="mt-5">
+{% extends 'layout.html' %}
+   {% block content %}
+   <link rel="stylesheet" type="text/css" href="../static/css/misc.css">
+   
             <h3>Private Messages with {{ receiver.username }}:</h3>
-            <div class="shadow-6 p-3 bg-white" style="height: 400px; overflow-y: scroll;" id="private-messages">
+            <div class="modal" style="height: 400px; overflow-y: scroll;" id="private-messages">
                 {% for message in private_messages %}
                 <div class="d-flex align-items-center mb-2">
                     {% if message.profile_pic %}
@@ -25,7 +23,7 @@
                         <input type="text" id="private-message-input" placeholder="Type your message" class="form-control" style="resize: none;" rows="1"/>
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-primary">Send</button>
-                        </div>
+                        </div>            
                     </div>
                 </form>
                 <div class="text-center">
@@ -35,10 +33,8 @@
             </div>
             </div>
     <script>
-    const socket = io.connect(location.origin);
-    socket.on("connect", () => {
-        socket.emit("join", { user_id: "{{ current_user.id }}" });
-    });
+
+
 
     const privateMessageForm = document.getElementById("private-chat-form");
     const privateMessageInput = document.getElementById("private-message-input");
@@ -79,10 +75,9 @@
 
     //  create me a focus when the page loads it is automatically focused
 
+    
 
 
     </script>       
    
-
-
 {% endblock %}

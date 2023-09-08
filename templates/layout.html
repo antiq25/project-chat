@@ -1,37 +1,57 @@
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>antiq's den</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta content="antiq's chatroom" name="description">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <head>
-    <meta charset="utf-8" />
-    <title>antiq's den</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta content="Chat Application" name="description" />
-    <meta content="Themesbrand" name="author" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <!-- App favicon -->
-    <link rel="shortcut icon" href="../static/uploads/default_image.png"> 
+  <!-- App favicon -->
+  <link rel="shortcut icon" type="text/css" href="../static/uploads/default_image.png">
 
-
-
-    <link rel="stylesheet" type="text/css" href="../static/css/mdb.min.css">
-    <link rel="stylesheet" type="text/css" href="../static/assets/css/vendor.min.css"> 
-    <link rel="stylesheet" type="text/css" href="../static/assets/css/app.min.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/animate.css//source/animate.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+  <!-- CSS -->
+  <link href="../static/node_modules/font-awesome/css/font-awesome.css" rel="stylesheet">
+  <link href="../static/node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="../static/node_modules/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
+  <link href="../static/node_modules/pace-js//pace-theme-default.min.css" rel="stylesheet">
+  <link href="../static/node_modules/bootstrap-table/dist/bootstrap-table.css" rel="stylesheet">
+  <link href="../static/node_modules/animate.css/animate.min.css" rel="stylesheet">
+  <link href="../static/node_modules/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
+  <link href="../static/assets/css/vendor.min.css" rel="stylesheet">  
+  <link href="../static/assets/css/app.min.css" rel="stylesheet">
+  
+  <link href="../static/css/style.css" rel="stylesheet">
+  <!-- Fonts -->
+</head>
+<link rel="stylesheet" href="../static/assets/webfonts/fa-brands-400.ttf">
     <!--  -->
 
-    <script defer type="application/javascript" src="../static/js/mdb.min.js"></script>
-    <script defer type="application/javascript" src="../static/assets/js/app.min.js"></script>
-    <script defer type="application/javascript" src="../static/assets/js/vendor.min.js"></script>
-    <!-- 
+    <script src="../static/js/socket.io.min.js"></script>
+    <script src="../static/js/socket.js"></script>
+    
+    <script src="../static/node_modules/pace-js/pace.min.js"></script>
+    <script src="../static/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../static/node_modules/jquery-ui/dist/jquery-ui.min.js"></script>  
+    <script src="../static/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/node_modules/js-cookie/dist/js.cookie.min.js"></script>
+    <script src="../static/node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+    <script src="../static/assets/js/app.min.js"></script>
+    
+  
 
-     -->
-    <script defer type="application/javascript" src="../static/js/jquery.js"></script>  
-
-
-    {% block content %}        
-    {% endblock %}
-
-  </body>
+{% block content %}
+<script src="../static/node_modules/pace-js/pace.min.js"></script>
+<script src="../static/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../static/node_modules/jquery-ui/dist/jquery-ui.min.js"></script>  
+<script src="../static/js/bootstrap.bundle.min.js"></script>
+<script src="../static/node_modules/js-cookie/dist/js.cookie.min.js"></script>
+<script src="../static/node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<script src="../static/assets/js/app.min.js"></script>
+{% endblock %}
+</body>
 </html>
+

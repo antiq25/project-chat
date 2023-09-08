@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "pace-js": "^1.2.4"
+  },
+  "devDependencies": {
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}

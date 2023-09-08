@@ -48,9 +48,6 @@ socket.on('user_left', function (data) {
 
 // Listen for the display_notification event to show the detailed notification
 
-
-
-
 function checkKey(event) {   // This how the fucken app knows ur typing 
     if (event.keyCode === 13) { 
         sendMessage();

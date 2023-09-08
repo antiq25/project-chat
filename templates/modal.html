@@ -1,0 +1,45 @@
+
+{% block content %}
+<link rel="stylesheet" href="../static/assets/css/app.min.css">
+
+      <h3>Profile</h3>
+      <p>Name: <span id="modalUserName"></span></p>
+      <!-- Messages You've Sent -->
+      <h3>Messages You've Sent</h3>
+      <ul id="sentMessagesList" class="list-group">
+        {% for message in sent_messages %}
+        <li class="list-group-item">
+          <strong>{{ message.receiver.username }}:</strong> {{ message.content }}
+          <small>{{ message.timestamp }}</small>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <!-- Messages You've Received -->
+      <h3>Messages You've Received</h3>
+      <ul id="receivedMessagesList" class="list-group">
+        {% for message in received_messages %}
+        <li class="list-group-item">
+          <strong>{{ message.sender.username }}:</strong> {{ message.content }}
+          <small>{{ message.timestamp }}</small>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-sm">
+     <ul class="list-group">
+        {% for sender in senders %}
+        <li class="list-group-item">
+          <a href="{{ url_for('private_chat', receiver_id=sender.id) }}">{{ sender.username }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+ <button type="button" class="btn btn-danger" id="clearInboxBtn">Clear Inbox</button>
+{% endblock %}
+
+{% block scripts %} 
+<script src="../static/js/bootstrap.min.js"></script> 
+{%  endblock %}

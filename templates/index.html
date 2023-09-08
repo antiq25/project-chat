@@ -1,407 +1,440 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
-<head>
-  <meta charset="UTF-8">
-  <title>antiq's den</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta content="Chat Application" name="description">
-  <meta content="Themesbrand" name="author">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
+{% extends 'layout.html' %}
+{% block content %}
 
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-  <!-- App favicon -->
-  <link rel="shortcut icon" type="text/css" href="../static/uploads/default_image.png">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../static/assets/css/app.min.css">
-
-  <link rel="stylesheet" href="../static/js/bootstrap.bundle.min.js">
-
-  <!--  -->
-  <link rel="stylesheet" href="../static/assets/css/vendor.min.css">
-  <link rel="stylesheet" href="../static/css/style.css"> 
-
-  <!-- Fonts -->
-  <link rel="stylesheet" href="../static/assets/webfonts/fa-brands-400.ttf">
-
-  <!-- JavaScript -->
-  <script defer src="../static/js/socket.io.min.js"></script>
-  <script defer src="../static/js/socket.js"></script>
-  <script defer src="../static/js/notis.js"></script>
-  <script defer src="../static/js/users_update.js"></script>
 </head>
+<meta name="csrf-token" content="{{ csrf_token() }}"> <!-- Flask's CSRF token for secured POST requests -->
 
-  <body class="app messanger" onload="document.getElementById('message').focus(); scrollBottom();">
-  <!-- App Header -->
-  <div id="header" class="app-header">
+<body class="text-bg-black" onload="document.getElementById('message').focus(); scrollBottom();">
 
-    <div class="desktop-toggler">
-    <button type="button" class="menu-toggler" data-toggle-class="app-sidebar-collapsed" data-dismiss-class="app-sidebar-toggled" data-toggle-target=".app">
-    <span class="bar"></span>
-    <span class="bar"></span>
-    <span class="bar"></span>
-    </button>
-    </div>
-    
-    
-    <div class="mobile-toggler">
-    <button type="button" class="menu-toggler" data-toggle-class="app-sidebar-mobile-toggled" data-toggle-target=".app">
-    <span class="bar"></span>
-    <span class="bar"></span>
-    <span class="bar"></span>
-    </button>
-    </div>
-    
-    
-    <div class="brand">
-
-    </div>
-    
-    
-    <div class="menu">
-    <div class="menu-item dropdown">
-    <a href="#" data-toggle-class="app-header-menu-search-toggled" data-toggle-target=".app" class="menu-link">
-    <div class="menu-icon"><i class="bi bi-search nav-icon"></i></div>
-    </a>
-    </div>
-    <div class="menu-item dropdown dropdown-mobile-full">
-    <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
-    <div class="menu-icon"><i class="bi bi-grid-3x3-gap nav-icon"></i></div>
-    </a>
-    <div class="dropdown-menu fade dropdown-menu-end w-300px text-center p-0 mt-1">
-    <div class="row row-grid gx-0">
-    <div class="col-4">
-    <a href="email_inbox.html" class="dropdown-item text-decoration-none p-3 bg-none">
-    <div class="position-relative">
-    <i class="bi bi-circle-fill position-absolute text-theme top-0 mt-n2 me-n2 fs-6px d-block text-center w-100"></i>
-    <i class="bi bi-envelope h2 opacity-5 d-block my-1"></i>
-    </div>
-    <div class="fw-500 fs-10px text-inverse">INBOX</div>
-    </a>
-    </div>
-    <div class="col-4">
-    <a href="pos_customer_order.html" target="_blank" class="dropdown-item text-decoration-none p-3 bg-none">
-    <div><i class="bi bi-hdd-network h2 opacity-5 d-block my-1"></i></div>
-    <div class="fw-500 fs-10px text-inverse">POS SYSTEM</div>
-    </a>
-    </div>
-    <div class="col-4">
-    <a href="calendar.html" class="dropdown-item text-decoration-none p-3 bg-none">
-    <div><i class="bi bi-calendar4 h2 opacity-5 d-block my-1"></i></div>
-    <div class="fw-500 fs-10px text-inverse">CALENDAR</div>
-    </a>
-    </div>
-    </div>
-    <div class="row row-grid gx-0">
-    <div class="col-4">
-    <a href="helper.html" class="dropdown-item text-decoration-none p-3 bg-none">
-    <div><i class="bi bi-terminal h2 opacity-5 d-block my-1"></i></div>
-    <div class="fw-500 fs-10px text-inverse">HELPER</div>
-    </a>
-    </div>
-    <div class="col-4">
-    <a href="settings.html" class="dropdown-item text-decoration-none p-3 bg-none">
-    <div class="position-relative">
-    <i class="bi bi-circle-fill position-absolute text-theme top-0 mt-n2 me-n2 fs-6px d-block text-center w-100"></i>
-    <i class="bi bi-sliders h2 opacity-5 d-block my-1"></i>
-    </div>
-    <div class="fw-500 fs-10px text-inverse">SETTINGS</div>
-    </a>
-    </div>
-    <div class="col-4">
-    <a href="widgets.html" class="dropdown-item text-decoration-none p-3 bg-none">
-    <div><i class="bi bi-collection-play h2 opacity-5 d-block my-1"></i></div>
-    <div class="fw-500 fs-10px text-inverse">WIDGETS</div>
-    </a>
-    </div>
-    </div>
-    </div>
-    </div>
-    <div class="menu-item dropdown dropdown-mobile-full">
-    <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
-    <div class="menu-icon"><i class="bi bi-bell nav-icon"></i></div>
-    <div class="menu-badge bg-theme"></div>
-    </a>
-    <div class="dropdown-menu dropdown-menu-end mt-1 w-300px fs-11px pt-1">
-    <h6 class="dropdown-header fs-10px mb-1">NOTIFICATIONS</h6>
-    <div class="dropdown-divider mt-1"></div>
-    <a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
-    <div class="fs-20px">
-    <i class="bi bi-bag text-theme"></i>
-    </div>
-    <div class="flex-1 flex-wrap ps-3">
-    <div class="mb-1 text-inverse">NEW ORDER RECEIVED ($1,299)</div>
-    <div class="small text-inverse text-opacity-50">JUST NOW</div>
-    </div>
-    <div class="ps-2 fs-16px">
-    <i class="bi bi-chevron-right"></i>
-    </div>
-    </a>
-    <a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
-    <div class="fs-20px w-20px">
-    <i class="bi bi-person-circle text-theme"></i>
-    </div>
-    <div class="flex-1 flex-wrap ps-3">
-    <div class="mb-1 text-inverse">3 NEW ACCOUNT CREATED</div>
-    <div class="small text-inverse text-opacity-50">2 MINUTES AGO</div>
-    </div>
-    <div class="ps-2 fs-16px">
-    <i class="bi bi-chevron-right"></i>
-    </div>
-    </a>
-    <a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
-    <div class="fs-20px w-20px">
-    <i class="bi bi-gear text-theme"></i>
-    </div>
-    <div class="flex-1 flex-wrap ps-3">
-    <div class="mb-1 text-inverse">SETUP COMPLETED</div>
-    <div class="small text-inverse text-opacity-50">3 MINUTES AGO</div>
-    </div>
-    <div class="ps-2 fs-16px">
-    <i class="bi bi-chevron-right"></i>
-    </div>
-    </a>
-    <a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
-    <div class="fs-20px w-20px">
-    <i class="bi bi-grid text-theme"></i>
-    </div>
-    <div class="flex-1 flex-wrap ps-3">
-    <div class="mb-1 text-inverse">WIDGET INSTALLATION DONE</div>
-    <div class="small text-inverse text-opacity-50">5 MINUTES AGO</div>
-    </div>
-    <div class="ps-2 fs-16px">
-    <i class="bi bi-chevron-right"></i>
-    </div>
-    </a>
-    <a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
-    <div class="fs-20px w-20px">
-    <i class="bi bi-credit-card text-theme"></i>
-    </div>
-    <div class="flex-1 flex-wrap ps-3">
-    <div class="mb-1 text-inverse">PAYMENT METHOD ENABLED</div>
-    <div class="small text-inverse text-opacity-50">10 MINUTES AGO</div>
-    </div>
-    <div class="ps-2 fs-16px">
-    <i class="bi bi-chevron-right"></i>
-    </div>
-    </a>
-    <hr class="my-0">
-    <div class="py-10px mb-n2 text-center">
-    <a href="#" class="text-decoration-none fw-bold">SEE ALL</a>
-    </div>
-    </div>
-    </div>
-    <div class="menu-item dropdown dropdown-mobile-full">
-    <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
-    <div class="menu-img online">
-    <img src="assets/img/user/profile.jpg" alt="Profile" height="60">
-    </div>
-
-    <div class="menu-text d-sm-block d-none w-170px">name</div>
-    
-    </a>
-    <div class="dropdown-menu dropdown-menu-end me-lg-3 fs-11px mt-1">
-    <a class="dropdown-item d-flex align-items-center" href="profile.html">PROFILE <i class="bi bi-person-circle ms-auto text-theme fs-16px my-n1"></i></a>
-    <a class="dropdown-item d-flex align-items-center" href="email_inbox.html">INBOX <i class="bi bi-envelope ms-auto text-theme fs-16px my-n1"></i></a>
-    <a class="dropdown-item d-flex align-items-center" href="calendar.html">CALENDAR <i class="bi bi-calendar ms-auto text-theme fs-16px my-n1"></i></a>
-    <a class="dropdown-item d-flex align-items-center" href="settings.html">SETTINGS <i class="bi bi-gear ms-auto text-theme fs-16px my-n1"></i></a>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item d-flex align-items-center" href="page_login.html">LOGOUT <i class="bi bi-toggle-off ms-auto text-theme fs-16px my-n1"></i></a>
-    </div>
-    </div>
-    </div>
-    
-    
-    <form class="menu-search" method="POST" name="header_search_form">
-    <div class="menu-search-container">
-    <div class="menu-search-icon"><i class="bi bi-search"></i></div>
-    <div class="menu-search-input">
-    <input type="text" class="form-control form-control-lg" placeholder="Search menu...">
-    </div>
-    <div class="menu-search-icon">
-    <a href="#" data-toggle-class="app-header-menu-search-toggled" data-toggle-target=".app"><i class="bi bi-x-lg"></i></a>
-    </div>
-    </div>
-    </form>
-    
+<div id="app" class="app app-content-full-width app-sidebar-collapsed">
+<div id="header" class="app-header text-bg-black">
+<div class="desktop-toggler">
+<button type="button" class="menu-toggler" data-toggle-class="app-sidebar-collapsed" data-dismiss-class="app-sidebar-toggled" data-toggle-target=".app">
+<span class="bar"></span>
+<span class="bar"></span>
+<span class="bar"></span>
+</button>
 </div>
-  <!-- End App Header -->
 
-  <!-- App Sidebar -->
-  <aside class="container-fluid bg-gradient app-sidebar app-sidebar-full">
-    <div class="app-sidebar" data-scrollbar="true" data-height="100%">
-      <button class="app-sidebar-mobile-backdrop" data-toggle-target=".app" data-toggle-class="app-sidebar-mobile-toggled"></button>
-<!-- THIS NEEDS TO STAY here  -->
-      <div class="menu">
-        <div class="menu-header">Navigation</div>
-        <h3 class="mb-10px">Chats</h3>
-        <a href="#" class="btn btn-link" id="openModal" data-bs-toggle="offcanvas"
-          data-bs-target="#inboxModal" aria-controls="us" aria-expanded="true">Inbox</a>
-      </div>
+<div class="mobile-toggler">
+<button type="button" class="menu-toggler" data-toggle-class="app-sidebar-mobile-toggled" data-toggle-target=".app">
+<span class="bar"></span>
+<span class="bar"></span>
+<span class="bar"></span>
+</button>
+</div>
+<div class="brand">
+<a href="index-2.html" class="brand-logo">
+<span class="brand-img">
+<span class="brand-img-text text-theme">EQ</span>
+</span>
+<span class="brand-text">eq network</span>
+</a>
+</div>
 
-      <div class="messenger-sidebar-body">
-        <h5 id="userListOffcanvasLabel">Online Users</h5>
-        <ul class="list-group list-group-flush" id="update_user_list">
-          {% for user in users_online %}
-          <li class="list-group-item d-flex align-items-center gap-3">
-            <img src="{{ url_for('static', filename=(user.profile_pic if user.profile_pic else 'uploads/default_image.webp')) }}"
-              alt="{{ (user.display_name if user.display_name else 'Default User') }}" width="50"
-              class="rounded-circle">
-            <div class="d-flex flex-column user-data">
-              <a href="{{ url_for('user_profile', user_id=user.id) }}" class="profile-link fs-5">
-                {{ user.display_name or user.username }}
-              </a>
-              <a href="{{ url_for('private_chat', receiver_id=user.id) }}"
-                class="btn btn-primary mt-2">
-                Chat {{ user.username }}</a>
+
+<div class="menu">
+<div class="menu-item dropdown">
+<a href="#" data-toggle-class="app-header-menu-search-toggled" data-toggle-target=".app" class="menu-link">
+<div class="menu-icon"><i class="bi bi-search nav-icon"></i></div>
+</a>
+</div>
+<div class="menu-item dropdown dropdown-mobile-full">
+<a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
+<div class="menu-icon"><i class="bi bi-grid-3x3-gap nav-icon"></i></div>
+</a>
+<div class="dropdown-menu fade dropdown-menu-end w-300px text-center p-0 mt-1">
+<div class="row row-grid gx-0">
+<div class="col-4">
+<a href="email_inbox.html" class="dropdown-item text-decoration-none p-3 bg-none">
+<div class="position-relative">
+<i class="bi bi-circle-fill position-absolute text-theme top-0 mt-n2 me-n2 fs-6px d-block text-center w-100"></i>
+<i class="bi bi-envelope h2 opacity-5 d-block my-1"></i>
+</div>
+<div class="fw-500 fs-10px text-inverse">INBOX</div>
+</a>
+</div>
+<div class="col-4">
+<a href="pos_customer_order.html" target="_blank" class="dropdown-item text-decoration-none p-3 bg-none">
+<div><i class="bi bi-hdd-network h2 opacity-5 d-block my-1"></i></div>
+<div class="fw-500 fs-10px text-inverse">POS SYSTEM</div>
+</a>
+</div>
+<div class="col-4">
+<a href="calendar.html" class="dropdown-item text-decoration-none p-3 bg-none">
+<div><i class="bi bi-calendar4 h2 opacity-5 d-block my-1"></i></div>
+<div class="fw-500 fs-10px text-inverse">CALENDAR</div>
+</a>
+</div>
+</div>
+<div class="row row-grid gx-0">
+<div class="col-4">
+<a href="helper.html" class="dropdown-item text-decoration-none p-3 bg-none">
+<div><i class="bi bi-terminal h2 opacity-5 d-block my-1"></i></div>
+<div class="fw-500 fs-10px text-inverse">HELPER</div>
+</a>
+</div>
+<div class="col-4">
+<a href="settings.html" class="dropdown-item text-decoration-none p-3 bg-none">
+<div class="position-relative">
+<i class="bi bi-circle-fill position-absolute text-theme top-0 mt-n2 me-n2 fs-6px d-block text-center w-100"></i>
+<i class="bi bi-sliders h2 opacity-5 d-block my-1"></i>
+</div>
+<div class="fw-500 fs-10px text-inverse">SETTINGS</div>
+</a>
+</div>
+<div class="col-4">
+<a href="widgets.html" class="dropdown-item text-decoration-none p-3 bg-none">
+<div><i class="bi bi-collection-play h2 opacity-5 d-block my-1"></i></div>
+<div class="fw-500 fs-10px text-inverse">WIDGETS</div>
+</a>
+</div>
+</div>
+</div>
+</div>
+<div class="menu-item dropdown dropdown-mobile-full">
+<a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
+<div class="menu-icon"><i class="bi bi-bell nav-icon"></i></div>
+<div class="menu-badge bg-theme"></div>
+</a>
+<div class="dropdown-menu dropdown-menu-end mt-1 w-300px fs-11px pt-1">
+<h6 class="dropdown-header fs-10px mb-1">NOTIFICATIONS</h6>
+<div class="dropdown-divider mt-1"></div>
+<a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
+<div class="fs-20px">
+    <!--   -->
+<i class="bi bi-bag text-theme"></i>
+</div>
+<div class="flex-1 flex-wrap ps-3">
+<div class="mb-1 text-inverse">NEW ORDER RECEIVED ($1,299)</div>
+<div class="small text-inverse text-opacity-50">JUST NOW</div>
+</div>
+<div class="ps-2 fs-16px">
+<i class="bi bi-chevron-right"></i>
+</div>
+</a>
+<a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
+<div class="fs-20px w-20px">
+<i class="bi bi-person-circle text-theme"></i>
+</div>
+<div class="flex-1 flex-wrap ps-3">
+<div class="mb-1 text-inverse">3 NEW ACCOUNT CREATED</div>
+<div class="small text-inverse text-opacity-50">2 MINUTES AGO</div>
+</div>
+<div class="ps-2 fs-16px">
+<i class="bi bi-chevron-right"></i>
+</div>
+</a>
+<a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
+<div class="fs-20px w-20px">
+<i class="bi bi-gear text-theme"></i>
+</div>
+<div class="flex-1 flex-wrap ps-3">
+<div class="mb-1 text-inverse">SETUP COMPLETED</div>
+<div class="small text-inverse text-opacity-50">3 MINUTES AGO</div>
+</div>
+<div class="ps-2 fs-16px">
+<i class="bi bi-chevron-right"></i>
+</div>
+</a>
+<a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
+<div class="fs-20px w-20px">
+<i class="bi bi-grid text-theme"></i>
+</div>
+<div class="flex-1 flex-wrap ps-3">
+<div class="mb-1 text-inverse">WIDGET INSTALLATION DONE</div>
+<div class="small text-inverse text-opacity-50">5 MINUTES AGO</div>
+</div>
+<div class="ps-2 fs-16px">
+<i class="bi bi-chevron-right"></i>
+</div>
+</a>
+<a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
+<div class="fs-20px w-20px">
+<i class="bi bi-credit-card text-theme"></i>
+</div>
+<div class="flex-1 flex-wrap ps-3">
+<div class="mb-1 text-inverse">PAYMENT METHOD ENABLED</div>
+<div class="small text-inverse text-opacity-50">10 MINUTES AGO</div>
+</div>
+<div class="ps-2 fs-16px">
+<i class="bi bi-chevron-right"></i>
+</div>
+</a>
+<hr class="my-0">
+<div class="py-10px mb-n2 text-center">
+<a href="#" class="text-decoration-none fw-bold">SEE ALL</a>
+</div>
+</div>
+</div>
+<div class="menu-item dropdown dropdown-mobile-full">
+<a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
+<div class="menu-img online">
+<img src="../static/uploads/default_image.png" alt="Profile" height="60">
+</div>
+<div class="menu-text d-sm-block d-none w-170px"><span class="__cf_email__" data-cfemail="70050315021e111d15301113131f051e045e131f1d">[email&#160;protected]</span></div>
+</a>
+<div class="dropdown-menu dropdown-menu-end me-lg-3 fs-11px mt-1">
+<a class="dropdown-item d-flex align-items-center" href="profile.html">PROFILE <i class="bi bi-person-circle ms-auto text-theme fs-16px my-n1"></i></a>
+<a class="dropdown-item d-flex align-items-center" href="email_inbox.html">INBOX <i class="bi bi-envelope ms-auto text-theme fs-16px my-n1"></i></a>
+<a class="dropdown-item d-flex align-items-center" href="calendar.html">CALENDAR <i class="bi bi-calendar ms-auto text-theme fs-16px my-n1"></i></a>
+<a class="dropdown-item d-flex align-items-center" href="settings.html">SETTINGS <i class="bi bi-gear ms-auto text-theme fs-16px my-n1"></i></a>
+<div class="dropdown-divider"></div>
+<a class="dropdown-item d-flex align-items-center" href="page_login.html">LOGOUT <i class="bi bi-toggle-off ms-auto text-theme fs-16px my-n1"></i></a>
+</div>
+</div>
+</div>
+
+
+<form class="menu-search" method="POST" name="header_search_form">
+<div class="menu-search-container">
+<div class="menu-search-icon"><i class="bi bi-search"></i></div>
+<div class="menu-search-input">
+<input type="text" class="form-control form-control-lg" placeholder="Search menu...">
+</div>
+<div class="menu-search-icon">
+<a href="#" data-toggle-class="app-header-menu-search-toggled" data-toggle-target=".app"><i class="bi bi-x-lg"></i></a>
+</div>
+</div>
+</form>
+
+</div>
+
+
+<div id="sidebar" class="app-sidebar bg-gradient text-bg-black">
+
+<div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
+    <span id="notificationCount" style="display: none;">0</span> <!-- Initially hidden. Will be shown when there are notifications. -->
+    <div id="notificationList">
+
+<div class="menu">
+<div class="menu-header">Navigation</div>
+<div class="menu-item">
+<a href="index-2.html" class="menu-link">
+<span class="menu-icon"><i class="bi bi-cpu"></i></span>
+<span class="menu-text">Dashboard</span>
+</a>
+<div class="menu-divider"></div>
+<div class="menu-header">Users</div>
+<div class="menu-item">
+<a href="profile.html" class="menu-link">
+<span class="menu-icon"><i class="bi bi-people"></i></span>
+<span class="menu-text">Profile</span>
+</a>
+</div>
+<div class="menu-item">
+<a href="calendar.html" class="menu-link">
+<span class="menu-icon"><i class="bi bi-calendar4"></i></span>
+<span class="menu-text">Calendar</span>
+</a>
+</div>
+<div class="menu-item">
+<a href="settings.html" class="menu-link">
+<span class="menu-icon"><i class="bi bi-gear"></i></span>
+<span class="menu-text">Settings</span>
+</a>
+</div>
+<div class="menu-item">
+<a href="helper.html" class="menu-link">
+<span class="menu-icon"><i class="bi bi-gem"></i></span>
+<span class="menu-text">Helper</span>
+</a>
+</div>
+</div>
+
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+<button class="app-sidebar-mobile-backdrop" data-toggle-target=".app" data-toggle-class="app-sidebar-mobile-toggled"></button>
+
+<div class="card h-100">
+    <div class="messenger">
+        <div class="messenger-sidebar">
+       
+            <div class="messenger-sidebar-header">
+                <h3 class="mb-10px">Chats</h3>
+                <div class="position-relative">
+                    <button type="submit" class="btn text-inverse position-absolute top-0"><i class="bi bi-search"></i></button>
+                    <input type="text" class="form-control rounded-pill ps-35px" placeholder="Search Messenger">
+                </div>
             </div>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
+          
+            <div class="messenger-sidebar-body" id="update_user_list">
+                <div data-scrollbar="true" data-height="100%" class="ps" data-init="true">
+                    <!-- Loop to list the online users -->
+                    {% for user in users_online %}
+                    <div class="messenger-item">
+                       <a href="{{ url_for('private_chat', receiver_id=user.id) }}" data-toggle="messenger-content" class="messenger-link">
 
-      <div class="modal" id="inboxModal" tabindex="-1" aria-labelledby="inboxModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
+                            <div class="messenger-media">
+                                <img src="{{ url_for('static', filename=(user.profile_pic if user.profile_pic else 'uploads/default_image.webp')) }}"
+                                    alt="{{ (user.display_name if user.display_name else 'Default User') }}" width="50" class="card-img">
+                            </div>
+                            <div class="messenger-info">
+                                <div class="messenger-name" >{{ user.display_name or user.username }}</div>
+
+                                <div class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Options</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/profile/{{ user.id }}">View Profile</a>
+                                        <a class="dropdown-item" href="{{ url_for('private_chat', receiver_id=user.id) }}">Chat with {{ user.username or user.display_name }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+
+            <div class="messenger-content">
+                <div class="messenger-content-header">
+                <div class="messenger-content-header-mobile-toggler">
+                <a href="#" data-toggle="messenger-content" class="me-2">
+                <i class="bi bi-chevron-left"></i>
+                </a>
+                    <a href="#" class="btn btn-link"><i class="bi bi-search"></i></a>
+                    <div class="dropdown">
+                    <a href="#" class="btn btn-link" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                    <div class="dropdown-menu fs-12px fw-bold">
+                    <a href="#" class="dropdown-item d-flex align-items-center"><i class="bi bi-pencil-square fs-14px my-n1 me-2"></i> EDIT</a>
+                    <a href="#" class="dropdown-item d-flex align-items-center"><i class="bi bi-info-circle fs-14px my-n1 me-2"></i> INFO</a>
+                    <a href="#" class="dropdown-item d-flex align-items-center"><i class="bi bi-bell-slash fs-14px my-n1 me-2"></i> MUTE</a>
+                    <a href="#" class="dropdown-item d-flex align-items-center"><i class="bi bi-x-circle fs-14px my-n1 me-2"></i> CLEAR CHAT HISTORY</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item d-flex align-items-center text-danger"><i class="bi bi-trash fs-14px my-n1 me-2"></i> DELETE AND LEAVE</a>
+                    </div>
+                    </div>
+                </div>
+                <!-- ... your header content ... -->
+            </div>
+
+            <div class="messenger-content-body invisible">
+                <div data-scrollbar="true" data-height="100%">                    
+                    <div class="widget-chat" id="chatbox">
+                        <div class="widget-chat-date">TODAY</div>
+                        {% for message in messages %}
+                            <div class="widget-chat-item">
+                                <div class="widget-chat-media">
+                                    <img src="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.webp')) }}"
+                                        alt="{{ (message.sender.display_name if message.sender.display_name else 'Default User') }}" width="30" class="card-img">
+                                </div>
+                                <div class="widget-chat-content">
+                                    <div>
+                                        <span id="notificationCount" style="display: none;">0</span> <!-- Initially hidden. Will be shown when there are notifications. -->
+                                    </div>
+                                    <div class="widget-chat-name">{{ message.sender.display_name or message.sender.username }}</div>
+                                    <div class="widget-chat-message last">
+                                        {{ message.content }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="messenger-content-footer">
+                <div class="input-group input-group-lg position-relative z-3">
+                    <button class="btn text-inverse position-absolute start-0" id="trigger"><i class="fa fa-smile-o" aria-hidden="true"></i></button>
+                    <input type="text" class="form-control rounded-start ps-45px" id="message" placeholder="Write a message..." onkeydown="checkKey(event)">
+                    <button class="btn btn-outline-default" onclick="sendMessage()" id="message-button"><i class="fa fa-paper-plane text-muted"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-arrow">
+        <div class="card-arrow-top-left"></div>
+        <div class="card-arrow-top-right"></div>
+        <div class="card-arrow-bottom-left"></div>
+        <div class="card-arrow-bottom-right"></div>
+    </div>
+</div>
+<!-- Private Message Modal -->
+  
+<!-- Start modals -->
+
+
+<!-- User Profile Modal -->
+<div class="modal fade" id="userModal" aria-hidden="true" aria-labelledby="userModalLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="inboxModalLabel">Inbox</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"
-                aria-label="Close"></button>
+                <h5 class="modal-title" id="userModalLabel">User Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <h2>Conversations:</h2>
-              <ul>
-                {% for sender in senders %}
-                <li><a href="{{ url_for('private_chat', receiver_id=sender.id) }}">{{ sender.username }}</a>
-                </li>
-                {% endfor %}
-              </ul>
-              <h2>All Received Messages:</h2>
-              <ul id="receivedMessagesList">
-                {% for message in received_messages %}
-                <li><strong>{{ message.sender.username }}:</strong> {{ message.content }} <small>{{
-                    message.timestamp }}</small></li>
-                {% endfor %}
-              </ul>
+                <img id="userModalImage" src="" alt="User Profile Image" width="100">
+                <h6 id="userModalName"></h6>
+                
+                <!-- The iframe that will load the private message page -->
+                <iframe id="privateMessageIframe" width="100%" height="300px"></iframe>
             </div>
-            <button type="button" class="btn btn-danger" id="clearInboxBtn">Clear Inbox</button>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </aside>
-  <!-- End App Sidebar -->
+</div>
 
-  <!-- Main Content -->
-  <main class="app-content">
-    <section class="messenger-content">
-      <header class="messenger-content-header">
-        <div class="messenger-content-header-mobile-toggler">
-          <a href="#" data-toggle="messenger-content" class="me-2">
-          </a>
-        </div>
-        <div class="messenger-content-header-info">
-          Eclectiq Public Chat
-        </div>
-        <div class="messenger-content-header-btn">
-          <a href="#" class="btn btn-link"><i class="bi bi-search"></i></a>
-          <div class="dropdown">
-            <a href="#" class="btn btn-link" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-            <div class="dropdown-menu fs-12px fw-bold">
-              <a href="#" class="dropdown-item d-flex align-items-center"><i
-                  class="bi bi-pencil-square fs-14px my-n1 me-2"></i> EDIT</a>
-              <a href="#" class="dropdown-item d-flex align-items-center"><i
-                  class="bi bi-info-circle fs-14px my-n1 me-2"></i> INFO</a>
-              <a href="#" class="dropdown-item d-flex align-items-center"><i
-                  class="bi bi-bell-slash fs-14px my-n1 me-2"></i> MUTE</a>
-              <a href="#" class="dropdown-item d-flex align-items-center"><i
-                  class="bi bi-x-circle fs-14px my-n1 me-2"></i> CLEAR CHAT HISTORY</a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item d-flex align-items-center text-danger"><i
-                  class="bi bi-trash fs-14px my-n1 me-2"></i> DELETE AND LEAVE</a>
+
+
+<!-- Send Private Message Modal -->
+<div class="modal fade" id="userModal" aria-hidden="true" aria-labelledby="userModalLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">User Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-          </div>
+            <div class="modal-body">
+                <img id="userModalImage" src="" alt="User Profile Image" width="100">
+                <h6 id="userModalName"></h6>
+                <!-- Add the iframe here -->
+                <iframe id="privateMessageIframe" width="100%" height="300"></iframe>
+            </div>
         </div>
-      </header>
-      
-      <div class="card-body border-2" id="chatbox">
-        <div class="card-arrow"></div>
-        {% for message in messages %}
-        <div class="d-flex align-items-start mb-2">
-          <a href="{{ url_for('user_profile', user_id=message.sender_id) }}" class="profile-link me-2"
-            title="View profile" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-html="true"
-            data-bs-content="<img src='{{ url_for('static', filename=message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.webp') }}' width='50'><br>{{ message.sender.username }}">
-            <img src="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.webp')) }}"
-              alt="{{ (message.sender.display_name if message.sender.display_name else 'Default User') }}" width="30"
-              class="rounded-circle">
-          </a>
-          <div class="receiverMessage ms-3" id="receiverMessage">
-            <strong><a href="{{ url_for('user_profile', user_id=message.sender_id) }}"
-                class="profile-link">{{ message.sender.display_name or message.sender.username }}</a></strong>:
-            {{ message.content }}
-          </div>
-          
-        </div>
-        {% endfor %}
-      </div>
-      <div class="input-group input-group-lg position-relative z-3">
-        <div class="input-group">
-          <input type="text" class="form-control" id="message" placeholder="Enter your message"
-            onkeydown="checkKey(event)">
-          <div class="input-group-append">
-            <button class="btn btn-primary" onkeydown="checkKey(event)" onclick="sendMessage()">Send</button>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-  <!-- End Main Content -->
+    </div>
+</div>
 
-  <script type="application/javascript" src="../static/assets/js/app.min.js"></script>
-  <script type="application/javascript" src="../static/assets/js/vendor.min.js"></script>
-  <script type="application/javascript" src="../static/js/demo/ui-modal-notification.demo.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      var triggerEl = document.querySelector('#navId a[href="myTabContent"]');
-      if (triggerEl) {
-        var tab = new bootstrap.Tab(triggerEl);
-        tab.show();
-      }
-    });
+<script>
+    function showPrivateMessageIframe(user) {
+        // Set the source for the iframe, change the '/private_message_page' to your actual route
+        document.getElementById('privateMessageIframe').src = `/private/<int:receiver_id>"`;
     
-    // Function to send a message
-    function sendMessage() {
-      var messageInput = document.getElementById('message');
-      var message = messageInput.value;
-      
-      // Send the message using socket.io or any other method
-      
-      // Clear the message input
-      messageInput.value = '';
+        // Now display the modal
+        const pmModal = new bootstrap.Modal(document.getElementById('privateMessageModal'));
+        pmModal.show();
     }
     
-    // Function to handle keydown event
-    function checkKey(event) {
-      if (event.keyCode === 13) {
-        event.preventDefault();
-        sendMessage();
-      }
-    }
-  </script>
+</script>
+<!-- Button to open user profile modal for demonstration -->
 
-    <script>
-    $(document).on('click', function (e) {
-      if ($(e.target).closest(".app-sidebar-mobile-toggled .app-sidebar").length === 0) {
-        $("body").find(".app-sidebar-mobile-toggled .app-sidebar").removeClass("show");
-      }
-    }); 
-  </script>
+
+
+
+
+
+
+
+
+
+
   
-</body>
-</html>
+
+ 
+ 
+  
+  
+  
+
+
+<script type="module" src="../static/js/page-messenger.demo.js"></script>
+<script src="../static/js/users_update.js"></script>
+
+{% endblock %}
+

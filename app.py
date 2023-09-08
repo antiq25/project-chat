@@ -10,7 +10,7 @@ import logging
 import os
 
 app = Flask(__name__)
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1) # This a production level server 
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1) # This a production level server
 CORS(app)
 app.config["SECRET_KEY"] = os.urandom(24)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///chat.db"
@@ -49,7 +49,7 @@ class Message(db.Model):
     receiver_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
     read = db.Column(db.Boolean, default=False)
 
-    
+
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -72,9 +72,9 @@ def internal_error(e):
     app.logger.error(f"Server error: {e}")
     return render_template('500.html'), 500
 
-@app.route("/test", methods=["GET"])    
+@app.route("/test", methods=["GET"])
 def test():
-    return render_template("index-2.html")
+    return render_template("test.html")
 
 
 @app.route("/profile", methods=["GET", "POST"])
@@ -138,23 +138,35 @@ def register():
 def logout():
     session.pop("user_id", None)
     session.pop("username", None)
-    return redirect(url_for("login"))
-
+    return redirect(url_for("login")
+                    
+                    )
 @app.route("/")
 def index():
     user = get_current_user()
 
     if "user_id" not in session:
         return redirect(url_for("login"))
-    
+
     current_user = User.query.get(session["user_id"])
     users_online_list = [User.query.get(user["id"]) for user in online_users.values()]
     messages = Message.query.filter(Message.receiver_id == None).all()
     received_messages = Message.query.filter_by(receiver_id=user.id).all()
     senders = set([msg.sender for msg in received_messages])
+    
+    if "receiver_id" in session:
+        receiver = User.query.get(session["receiver_id"])
+    else:
+        receiver = None
 
-
-    return render_template("index.html", messages=messages, username=session["username"], current_user=current_user, users_online=users_online_list, senders=senders, received_messages=received_messages)
+    return render_template("index.html", 
+                           messages=messages, 
+                           username=session["username"],
+                           current_user=current_user, 
+                           users_online=users_online_list,
+                           senders=senders, 
+                           received_messages=received_messages,
+                           receiver=receiver)
 
 
 
@@ -187,7 +199,7 @@ def handle_private_message(data):
 
     # Emit a simple notification to update the count on the client side
     emit("update_notification_count", {}, room=str(receiver_id))
-    
+
     # Send detailed real-time notification to receiver
     emit("display_notification", {"message": notification_message}, room=str(receiver_id))
     print(f"Notification emitted to {receiver_id} with message: {notification_message}")
@@ -201,7 +213,7 @@ def handle_private_message(data):
 
     # Emit to sender (the current user)
     emit("private_message", {
-        "from": sender.id,                                                            
+        "from": sender.id,
         "display_name": sender.username,
         "message": content
     }, room=request.sid)
@@ -224,17 +236,17 @@ def unread_messages_count():
     user = get_current_user()
     if not user:
         return jsonify({"count": 0})
-    
+
     count = Message.query.filter_by(receiver_id=user.id, read=False).count()
     return jsonify({"count": count})
 
 @app.route("/mark_notification_read/<int:notification_id>", methods=["POST"])
 def mark_notification_read(notification_id):
-    print(f"Attempting to mark notification {notification_id} as read.") 
+    print(f"Attempting to mark notification {notification_id} as read.")
 
     notification = Notification.query.get(notification_id)
-    
-    
+
+
     if not notification:
         print(f"Notification {notification_id} not found.")  # Debugging statement
         return jsonify({"status": "error", "message": "Notification not found"}), 404
@@ -255,12 +267,12 @@ def fetch_notifications():
         return jsonify({"error": "User not authenticated"}), 401
 
     notifications = Notification.query.filter_by(user_id=user.id, read=False).all()
-    
+
     # If there are no notifications
     if not notifications:
         return jsonify({"message": "No unread notifications", "notifications": []})
-    
-    
+
+
 
     # Transform the ORM objects to a list of dictionaries
     notification_dicts = [{
@@ -287,7 +299,7 @@ def private_chat(receiver_id):
     user = get_current_user()
     if not user:
         return redirect(url_for("login"))
-    
+
     receiver = User.query.get(receiver_id)
     if not receiver:
         return "User not found", 404
