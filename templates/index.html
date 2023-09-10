@@ -1,6 +1,5 @@
 {% extends 'layout.html' %}
 {% block content %}
-<script src="../static/js/socket.js"></script>
 
 </head>
 <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- Flask's CSRF token for secured POST requests -->
@@ -400,7 +399,6 @@
   
 
 
-<script src="../static/js/users_update.js"></script>
 <script type="module" src="../static/js/page-messenger.demo.js"></script>
 
 {% endblock %}

@@ -1,72 +1,151 @@
 
-{% extends 'layout.html' %}
-{% block content %} 
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>antiq's den</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta content="antiq's chatroom" name="description">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<link rel="stylesheet" href="../static/assets/css/app.min.css">
-<link rel="stylesheet" href="../static/css/style.css">  
-    
-    <div id="chatWidget" class="mb-5">
-        <body class="text-bg-black" onload="document.getElementById('send-button').focus(); scrollBottom();">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+  <!-- App favicon -->
+  <link rel="shortcut icon" type="text/css" href="../static/uploads/default_image.png">
 
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-8">
-                        <div class="card">
-                            <div class="card-header bg-none fw-bold d-flex align-items-center">
-                                eq chat widget
-                                <a href="#" class="ms-auto text-muted text-decoration-none" data-toggle="card-expand">
-                                    <i class="fa fa-expand"></i>
-                                </a>
-                            </div>
-                            <div class="card-body bg-inverse bg-opacity-10 ps ps--active-y" data-scrollbar="true" data-height="500px" style="height: 200px;">
-                                <div class="widget-chat" id="private-chatbox">
-                                    {% for message in private_messages %}
-                                        <div class="widget-chat-item">
-                                    <div class="widget-chat-media">
-                                        <img src="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.webp')) }}"
-                                            alt="{{ (message.sender.display_name if message.sender.display_name else 'Default User') }}" width="30" class="card-img">
-                                    </div>
-                                    <div class="widget-chat-content">
-                                        <div>
-                                        </div>
-                                        <div class="widget-chat-name">{{ message.sender.display_name or message.sender.username }}</div>
-                                        <div class="widget-chat-message last">
-                                            {{ message.content }}
-                                        </div>
-                                    </div>
+  <!-- CSS -->
+  <link href="../static/node_modules/font-awesome/css/font-awesome.css" rel="stylesheet">
+  <link href="../static/node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="../static/node_modules/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
+  <link href="../static/node_modules/pace-js//pace-theme-default.min.css" rel="stylesheet">
+  <link href="../static/node_modules/bootstrap-table/dist/bootstrap-table.css" rel="stylesheet">
+  <link href="../static/node_modules/animate.css/animate.min.css" rel="stylesheet">
+  <link href="../static/node_modules/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
+  <link href="../static/assets/css/vendor.min.css" rel="stylesheet">  
+  <link href="../static/assets/css/app.min.css" rel="stylesheet">
+  
+  <link href="../static/css/style.css" rel="stylesheet">
+  <!-- Fonts -->
+</head>
+<link rel="stylesheet" href="../static/assets/webfonts/fa-brands-400.ttf">
+
+<!-- ... other stylesheets ... -->
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" crossorigin="anonymous"></script>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="card">
+                    <div class="card-header bg-none fw-bold d-flex align-items-center">
+                        <h3>Private Messages with {{ receiver.username }}:</h3>
+                        <a href="#" class="ms-auto text-muted text-decoration-none" data-toggle="card-expand" data-height="400px">
+                            <i class="fa fa-expand"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body bg-inverse bg-opacity-10 ps ps--active-y" data-scrollbar="true" data-height="500px" style="height: 200px;">                    <div class="widget-chat" id="private-messages">
+                        {% for message in private_messages %}
+                        <div class="d-flex align-items-center mb-2 widget-chat-item">
+                            {% if message.profile_pic %}
+                            <img src="{{ message.profile_pic }}" alt="Profile Picture" width="30" height="30" class="rounded-circle me-2">
+                            {% endif %}
+                            <div class="widget-chat-content">
+                                <div class="widget-chat-name">
+                                    {{ message.display_name }}
                                 </div>
-                            {% endfor %}
+                                <div class="widget-chat-message last">
+                                    {{ message.content }}
                                 </div>
                             </div>
-                            <div class="card-footer bg-none">
-                                <div class="input-group">
-                                    <input type="text" id="private-message-input" class="form-control" placeholder="Type your message">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-default" type="button" id="send-button">
-                                            <i class="fa fa-paper-plane text-muted"></i>
-                                        </button>
-                                    </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                    <div id="chatbox">
+                        <form id="private-chat-form" class="chatbox">
+                            <div class="input-group">
+                                <input type="text" id="private-message-input" placeholder="Type your message" class="form-control">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Send</button>
                                 </div>
                             </div>
-                            <div class="card-arrow">
-                                <div class="card-arrow-top-left"></div>
-                                <div class="card-arrow-top-right"></div>
-                                <div class="card-arrow-bottom-left"></div>
-                                <div class="card-arrow-bottom-right"></div>
-
-                                
-                            </div>
+                        </form>
+                        <div class="text-center">
+                            <a href="/" class="btn btn-secondary mt-4">Back to Global Chat</a>
+                            <a href="/logout" class="btn btn-danger mt-4">Logout</a>
+                        </div>
+                        <div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div class="card-arrow">
+    <div class="card-arrow-top-left"></div>
+    <div class="card-arrow-top-right"></div>
+    <div class="card-arrow-bottom-left"></div>
+    <div class="card-arrow-bottom-right"></div>
+</div>
+</div>
 
-        <script src="../static/js/privatemsg.js"></script>
 
+<script>
+    const socket = io.connect(location.origin);
+socket.on("connect", () => {
+    socket.emit("join", { user_id: "{{ current_user.id }}" });
+});
 
+const privateMessageForm = document.getElementById("private-chat-form");
+const privateMessageInput = document.getElementById("private-message-input");
+const privateMessagesList = document.getElementById("private-messages");
 
+privateMessageForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const message = privateMessageInput.value.trim();
+    if (message) {
+        socket.emit("send_private_message", { 
+            sender_id: "{{ current_user.id }}",
+            receiver_id: "{{ receiver.id }}",
+            message 
+        });
+        privateMessageInput.value = "";
+    }
+});
 
-{% endblock %}
+socket.on('private_message', function(data) {
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("d-flex", "align-items-center", "mb-2", "widget-chat-item");
+
+    let profilePic = data.profile_pic ? `<img src="${data.profile_pic}" alt="${data.display_name || data.from}" width="30" height="30" class="rounded-circle me-2">` : "";
+
+    messageElement.innerHTML = `
+        ${profilePic}
+        <div class="widget-chat-content">
+            <div class="widget-chat-name">${data.display_name || data.from}</div>
+            <div class="widget-chat-message last">${data.message}</div>
+        </div>
+    `;
+
+    privateMessagesList.appendChild(messageElement);
+    scrollBottom();
+});
+
+function scrollBottom() {
+    privateMessagesList.scrollTop = privateMessagesList.scrollHeight;
+}
+
+window.onload = function() {
+    privateMessageInput.focus();
+    scrollBottom();
+};
+
+</script>
+
+<script src="../static/assets/js/vendor.min.js"></script>
+<script src="../static/assets/js/app.min.js"></script>
+<script src="../static/js/bootstrap.bundle.min.js"></script>
+

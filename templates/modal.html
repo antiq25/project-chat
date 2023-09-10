@@ -1,23 +1,82 @@
-{% block content %}
-  <h3>Messages You've Sent</h3>
-  <ul>
-    {% for message in sent_messages %}
-    <li>
-      <strong>{{ message.receiver.username }}:</strong> {{ message.content }}
-      <small>{{ message.timestamp }}</small>
-    </li>
-    {% endfor %}
-  </ul>
+{% block content %} 
 
-  <h3>Messages You've Received</h3>
-  <ul>
-    {% for message in received_messages %}
-    <li>
-      <strong>{{ message.sender.username }}:</strong> {{ message.content }}
-      <small>{{ message.timestamp }}</small>
-    </li>
-    {% endfor %}
-  </ul>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/misc.css">
+    <div class="container mt-5">
+        <div class="mt-5">
+            <h3>Private Messages with {{ receiver.username }}:</h3>
+            <div class="shadow-6 p-3 bg-white" style="height: 400px; overflow-y: scroll;" id="private-messages">
+                {% for message in private_messages %}
+                <div class="d-flex align-items-center mb-2">
+                    {% if message.profile_pic %}
+                    <img src="{{ message.profile_pic }}" alt="Profile Picture" width="30" height="30" class="rounded-circle me-2">
+                    {% endif %}
+                    <div>
+                        <strong>{{ message.display_name }}</strong>: {{ message.content }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="my-4">
+                <div id="chatbox">
+                <form id="private-chat-form" class="chatbox">
+                    <div class="input-group">
+                        <input type="text" id="private-message-input" placeholder="Type your message" class="form-control" style="resize: none;" rows="1"/>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="text-center">
+                    <a href="/" class="btn btn-secondary mt-4">Back to Global Chat</a>
+                    <a href="/logout" class="btn btn-danger mt-4">Logout</a>
+                </div>
+            </div>
+            </div>
+    <script>
+    const socket = io.connect(location.origin);
+    socket.on("connect", () => {
+        socket.emit("join", { user_id: "{{ current_user.id }}" });
+    });
 
-</div>
-{% endblock %}
+    const privateMessageForm = document.getElementById("private-chat-form");
+    const privateMessageInput = document.getElementById("private-message-input");
+    const privateMessagesList = document.getElementById("private-messages");
+
+    privateMessageForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const message = privateMessageInput.value.trim();
+        if (message) {
+            socket.emit("send_private_message", { 
+                sender_id: "{{ current_user.id }}",
+                receiver_id: "{{ receiver.id }}",
+                message 
+            });
+            privateMessageInput.value = "";
+        }
+    });
+
+    socket.on('private_message', function(data) {
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("d-flex", "align-items-center", "mb-2");
+        messageElement.innerHTML = `<strong>${data.display_name || data.from}</strong>: ${data.message}`;
+        privateMessagesList.appendChild(messageElement);
+        scrollBottom();
+    });
+
+   function scrollBottom() {
+    const privateMessages = document.getElementById("private-messages");    
+    privateMessages.scrollTop = privateMessages.scrollHeight;
+   }
+
+
+ 
+    window.onload = function() {
+    privateMessageInput.focus();
+    scrollBottom();
+    };  
+
+    </script>   
+{% endblock %}  
+
+

@@ -62,11 +62,11 @@ html {
     padding: 0;
 }
 
-#private-messagep span {
+#private-messages span {
     color: #000;
 }
 
-#private-messagep span.username {
+#private-messages span.username {
     font-weight: bold;
 }
 

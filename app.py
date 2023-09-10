@@ -22,8 +22,8 @@ socketio = SocketIO(app, async_mode="gevent", cors_allowed_origins="*")
 #socketio = SocketIO(app, manage_session=False)
 
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 online_users = {}
 
@@ -242,14 +242,16 @@ def handle_private_message(data):
     # Emit to receiver
     emit("private_message", {
         "from": sender.id,
-        "display_name": sender.username,
+        "display_name": sender.display_name or sender.username,
+        "profile_pic": url_for("static", filename=sender.profile_pic) if sender.profile_pic else url_for("static", filename="uploads/default_image.webp"),
         "message": content
     }, room=str(receiver_id))
 
     # Emit to sender (the current user)
     emit("private_message", {
         "from": sender.id,
-        "display_name": sender.username,
+        "display_name": sender.display_name or sender.username,
+        "profile_pic": url_for("static", filename=sender.profile_pic) if sender.profile_pic else url_for("static", filename="uploads/default_image.webp"),
         "message": content
     }, room=request.sid)
 
@@ -260,6 +262,7 @@ def handle_private_message(data):
     emit("update_conversations", {}, room=request.sid)
 
     emit("update_inbox", {}, room=str(receiver_id))
+
 
 
 

@@ -21,13 +21,9 @@
 /*  */
 
 
-.widget-chat, .widget-chat-content {
-  margin: 0;
-  padding: 0;
-}
 
 
-#chatbox {
+#chatbox, .widget-chat{
   margin: 0;
   padding: 0; 
 }
