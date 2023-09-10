@@ -1,0 +1,4 @@
+<h2>{{ user.username }}'s Profile</h2>
+
+<a class="btn btn-outline-inverse" href="{{ url_for('profile', user_id=user.id) }}">View Profile</a>
+<a class="btn grad4 btn-outline-black" href="{{ url_for('private_chat', receiver_id=user.id) }}">Private Chat</a>

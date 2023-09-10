@@ -1,0 +1,9 @@
+{% for user in users_online %}
+<a class="btn btn-outline-inverse" href="{{ url_for('profile', user_id=user.id) }}">View Profile</a>
+{% if loop.index < loop.revindex %}
+{% endif %}
+{% endfor %}
+{% for user in users_online %}
+
+<a class="btn grad4 btn-outline-black" href="{{ url_for('private_chat', receiver_id=user.id) }}">Private Chat</a>
+{% endfor %}

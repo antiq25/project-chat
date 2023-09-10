@@ -19,19 +19,18 @@
 }
 
 /*  */
-.widget-chat {
-  width: 100%;
-  overflow-y: scroll;
-  height: 400px;
-  color: white; 
-}
 
-.widget-chat .widget-chat-content {
+
+.widget-chat, .widget-chat-content {
   margin: 0;
   padding: 0;
 }
 
 
+#chatbox {
+  margin: 0;
+  padding: 0; 
+}
 
 
 #chatbox p {

@@ -72,13 +72,42 @@ def internal_error(e):
     app.logger.error(f"Server error: {e}")
     return render_template('500.html'), 500
 
-@app.route("/test", methods=["GET"])
+@app.route("/layout", methods=["GET"])
 def test():
-    return render_template("test.html")
+    current_user = get_current_user()
+
+    if not current_user:
+        return redirect(url_for("login"))
+
+    users_online_list = [User.query.get(user["id"]) for user in online_users.values()]
+    messages = Message.query.filter(Message.receiver_id == None).all()
+    received_messages = Message.query.filter_by(receiver_id=current_user.id).all()
+    senders = set([msg.sender for msg in received_messages])
+    
+    if "receiver_id" in session:
+        receiver = User.query.get(session["receiver_id"])
+    else:
+        receiver = None
+
+    return render_template("layout.html", 
+                           messages=messages, 
+                           username=current_user.username,  # Use current_user.username instead of session["username"]
+                           current_user=current_user, 
+                           users_online=users_online_list,
+                           senders=senders, 
+                           received_messages=received_messages,
+                           receiver=receiver)
+
+
+
+
+@app.route("/get_modal_content")
+def get_modal_content():
+    return render_template("modal.html")
 
 
 @app.route("/profile", methods=["GET", "POST"])
-def profile():
+def profile(): 
     user = User.query.filter_by(id=session["user_id"]).first()
     if request.method == "POST":
         display_name = request.form.get("display_name")
@@ -143,30 +172,36 @@ def logout():
                     )
 @app.route("/")
 def index():
-    user = get_current_user()
-
+    # Check if the user is logged in
     if "user_id" not in session:
         return redirect(url_for("login"))
-
-    current_user = User.query.get(session["user_id"])
-    users_online_list = [User.query.get(user["id"]) for user in online_users.values()]
+    
+    user = User.query.filter_by(id=session["user_id"]).first()  
+    current_user = get_current_user()
+    
+    # Fetch all online users in one query
+    online_user_ids = [user["id"] for user in online_users.values()]
+    users_online_list = User.query.filter(User.id.in_(online_user_ids)).all()
+    
     messages = Message.query.filter(Message.receiver_id == None).all()
-    received_messages = Message.query.filter_by(receiver_id=user.id).all()
+    received_messages = Message.query.filter_by(receiver_id=current_user.id).all()
     senders = set([msg.sender for msg in received_messages])
     
+    receiver = None
     if "receiver_id" in session:
         receiver = User.query.get(session["receiver_id"])
-    else:
-        receiver = None
 
     return render_template("index.html", 
+                           user=user,
                            messages=messages, 
-                           username=session["username"],
+                           username=current_user.username,  # Use current_user.username instead of session["username"]
                            current_user=current_user, 
                            users_online=users_online_list,
                            senders=senders, 
                            received_messages=received_messages,
                            receiver=receiver)
+
+
 
 
 
@@ -319,8 +354,12 @@ def private_chat(receiver_id):
 
 def get_current_user():
     if "user_id" in session:
-        return User.query.get(session["user_id"])
+        user = User.query.get(session["user_id"])
+        print(f"Fetching user: {user.username}")
+        return user
     return None
+
+
 
 
 @socketio.on("connect")

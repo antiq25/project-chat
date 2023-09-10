@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
+<script src="../static/js/socket.js"></script>
 
 </head>
 <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- Flask's CSRF token for secured POST requests -->
@@ -328,7 +329,6 @@
                                 </div>
                                 <div class="widget-chat-content">
                                     <div>
-                                        <span id="notificationCount" style="display: none;">0</span> <!-- Initially hidden. Will be shown when there are notifications. -->
                                     </div>
                                     <div class="widget-chat-name">{{ message.sender.display_name or message.sender.username }}</div>
                                     <div class="widget-chat-message last">
@@ -362,65 +362,32 @@
 <!-- Start modals -->
 
 
-<!-- User Profile Modal -->
+
 <div class="modal fade" id="userModal" aria-hidden="true" aria-labelledby="userModalLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">User Profile</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <img id="userModalImage" src="" alt="User Profile Image" width="100">
-                <h6 id="userModalName"></h6>
-                
-                <!-- The iframe that will load the private message page -->
-                <iframe id="privateMessageIframe" width="100%" height="300px"></iframe>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userModalLabel">User Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-    </div>
-</div>
+        <div class="modal-body">
+          <img id="userModalImage" src="" alt="User Profile Image" width="100" class="img-fluid">
+          <h6 id="userModalName"></h6>
+       
+          <div class="modal-footer">
+         
+        <a class="btn btn-outline-inverse" href="{{ url_for('profile', user_id=user.id) }}">View Profile</a>
+        <a class="btn grad4 btn-outline-black" href="{{ url_for('private_chat', receiver_id=user.id) }}">Private Chat</a>
+       
 
+      </div>     
 
-
-<!-- Send Private Message Modal -->
-<div class="modal fade" id="userModal" aria-hidden="true" aria-labelledby="userModalLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">User Profile</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <img id="userModalImage" src="" alt="User Profile Image" width="100">
-                <h6 id="userModalName"></h6>
-                <!-- Add the iframe here -->
-                <iframe id="privateMessageIframe" width="100%" height="300"></iframe>
-            </div>
         </div>
+      </div>
     </div>
-</div>
-
-<script>
-    function showPrivateMessageIframe(user) {
-        // Set the source for the iframe, change the '/private_message_page' to your actual route
-        document.getElementById('privateMessageIframe').src = `/private/<int:receiver_id>"`;
-    
-        // Now display the modal
-        const pmModal = new bootstrap.Modal(document.getElementById('privateMessageModal'));
-        pmModal.show();
-    }
-    
-</script>
-<!-- Button to open user profile modal for demonstration -->
-
-
-
-
-
-
-
-
+  </div>
+  
+  
 
 
 
@@ -433,8 +400,8 @@
   
 
 
-<script type="module" src="../static/js/page-messenger.demo.js"></script>
 <script src="../static/js/users_update.js"></script>
+<script type="module" src="../static/js/page-messenger.demo.js"></script>
 
 {% endblock %}
 

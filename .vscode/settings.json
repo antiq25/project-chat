@@ -1,7 +1,8 @@
 {
     "path-intellisense.extensionOnImport": true,
     "CodeGPT.model": "gpt-3.5-turbo-16k",
-    "CodeGPT.maxTokens": 10000,
+    "CodeGPT.maxTokens": 4000,
     "CodeGPT.organizationId": "org-kulsNmsk98i8VzK9s8ENiyGW",
-    "CodeGPT.apiKey": "OpenAI"
+    "CodeGPT.apiKey": "OpenAI",
+    "CodeGPT.temperature": 0.5
 }

@@ -1,83 +1,72 @@
 
 {% extends 'layout.html' %}
-   {% block content %}
-   <link rel="stylesheet" type="text/css" href="../static/css/misc.css">
-   
-            <h3>Private Messages with {{ receiver.username }}:</h3>
-            <div class="modal" style="height: 400px; overflow-y: scroll;" id="private-messages">
-                {% for message in private_messages %}
-                <div class="d-flex align-items-center mb-2">
-                    {% if message.profile_pic %}
-                    <img src="{{ message.profile_pic }}" alt="Profile Picture" width="30" height="30" class="rounded-circle me-2">
-                    {% endif %}
-                    <div>
-                        <strong>{{ message.display_name }}</strong>: {{ message.content }}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            <div class="my-4">
-                <div id="chatbox">
-                <form id="private-chat-form" class="chatbox">
-                    <div class="input-group">
-                        <input type="text" id="private-message-input" placeholder="Type your message" class="form-control" style="resize: none;" rows="1"/>
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">Send</button>
-                        </div>            
-                    </div>
-                </form>
-                <div class="text-center">
-                    <a href="/" class="btn btn-secondary mt-4">Back to Global Chat</a>
-                    <a href="/logout" class="btn btn-danger mt-4">Logout</a>
-                </div>
-            </div>
-            </div>
-    <script>
+{% block content %} 
 
-
-
-    const privateMessageForm = document.getElementById("private-chat-form");
-    const privateMessageInput = document.getElementById("private-message-input");
-    const privateMessagesList = document.getElementById("private-messages");
-
-    privateMessageForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const message = privateMessageInput.value.trim();
-        if (message) {
-            socket.emit("send_private_message", { 
-                sender_id: "{{ current_user.id }}",
-                receiver_id: "{{ receiver.id }}",
-                message 
-            });
-            privateMessageInput.value = "";
-        }
-    });
-
-    socket.on('private_message', function(data) {
-        const messageElement = document.createElement("div");
-        messageElement.classList.add("d-flex", "align-items-center", "mb-2");
-        messageElement.innerHTML = `<strong>${data.display_name || data.from}</strong>: ${data.message}`;
-        privateMessagesList.appendChild(messageElement);
-        scrollBottom();
-    });
-
-   function scrollBottom() {
-    const privateMessages = document.getElementById("private-messages");    
-    privateMessages.scrollTop = privateMessages.scrollHeight;
-   }
-
-
- 
-    window.onload = function() {
-    privateMessageInput.focus();
-    scrollBottom();
-}
-
-    //  create me a focus when the page loads it is automatically focused
-
+<link rel="stylesheet" href="../static/assets/css/app.min.css">
+<link rel="stylesheet" href="../static/css/style.css">  
     
+    <div id="chatWidget" class="mb-5">
+        <body class="text-bg-black" onload="document.getElementById('send-button').focus(); scrollBottom();">
 
 
-    </script>       
-   
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="card">
+                            <div class="card-header bg-none fw-bold d-flex align-items-center">
+                                eq chat widget
+                                <a href="#" class="ms-auto text-muted text-decoration-none" data-toggle="card-expand">
+                                    <i class="fa fa-expand"></i>
+                                </a>
+                            </div>
+                            <div class="card-body bg-inverse bg-opacity-10 ps ps--active-y" data-scrollbar="true" data-height="500px" style="height: 200px;">
+                                <div class="widget-chat" id="private-chatbox">
+                                    {% for message in private_messages %}
+                                        <div class="widget-chat-item">
+                                    <div class="widget-chat-media">
+                                        <img src="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.webp')) }}"
+                                            alt="{{ (message.sender.display_name if message.sender.display_name else 'Default User') }}" width="30" class="card-img">
+                                    </div>
+                                    <div class="widget-chat-content">
+                                        <div>
+                                        </div>
+                                        <div class="widget-chat-name">{{ message.sender.display_name or message.sender.username }}</div>
+                                        <div class="widget-chat-message last">
+                                            {{ message.content }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                                </div>
+                            </div>
+                            <div class="card-footer bg-none">
+                                <div class="input-group">
+                                    <input type="text" id="private-message-input" class="form-control" placeholder="Type your message">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-default" type="button" id="send-button">
+                                            <i class="fa fa-paper-plane text-muted"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-arrow">
+                                <div class="card-arrow-top-left"></div>
+                                <div class="card-arrow-top-right"></div>
+                                <div class="card-arrow-bottom-left"></div>
+                                <div class="card-arrow-bottom-right"></div>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="../static/js/privatemsg.js"></script>
+
+
+
+
 {% endblock %}

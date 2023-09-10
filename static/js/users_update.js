@@ -61,23 +61,19 @@ socket.on('update_user_list', function(data) {
 
 
 
-   function showModal(user) {
+
+function showModal(user) {
     const modalImage = document.getElementById("userModalImage");
     const modalName = document.getElementById("userModalName");
-    const iframeElement = document.getElementById('privateMessageIframe');
 
     modalImage.src = user.profile_pic || '/static/uploads/default_image.webp';
     modalName.textContent = user.display_name || user.username;
-    
-    // Set the source of the iframe to the correct URL
-    iframeElement.src = `/private/${user.id}`;
 
     const userModal = new bootstrap.Modal(document.getElementById('userModal'));
     userModal.show();
 }
 
 
-// MODALS ///
 
 
 

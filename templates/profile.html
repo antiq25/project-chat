@@ -1,17 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Profile</title>
-    <link rel="stylesheet" href="../static/css/style.css">
-</head>
-<div class="container-fluid linear-gradient-titanium">
-    <div class="row justify-content-center">
+
+{% extends 'index.html' %}
+{% block content %}
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     Profile
                 </div>
                 <div class="card-body">
+                  
                     <form action="/profile" method="post" enctype="multipart/form-data">
                         <div class="container mb-3">
                             <label class="form-label">Username</label>
@@ -42,6 +38,7 @@
                             name="csrf_token"
                             value="{{ csrf_token() }}"
                           />
+                    
                             <input type="file" class="form-control" name="profile_pic">
                         </div>
                         <button type="submit" class="btn btn-primary">Update Profile</button>
@@ -52,5 +49,4 @@
         </div>
     </div>
 </div>
-</body>
-</html>
+{% endblock content %}
