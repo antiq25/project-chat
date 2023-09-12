@@ -101,9 +101,37 @@ def test():
 
 
 
-@app.route("/get_modal_content")
+@app.route("/modal")
 def get_modal_content():
-    return render_template("modal.html")
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    
+    user = User.query.filter_by(id=session["user_id"]).first()  
+    current_user = get_current_user()
+    
+    # Fetch all online users in one query
+    online_user_ids = [user["id"] for user in online_users.values()]
+    users_online_list = User.query.filter(User.id.in_(online_user_ids)).all()
+    
+    messages = Message.query.filter(Message.receiver_id == None).all()
+    received_messages = Message.query.filter_by(receiver_id=current_user.id).all()
+    senders = set([msg.sender for msg in received_messages])
+    
+    receiver = None
+    if "receiver_id" in session:
+        receiver = User.query.get(session["receiver_id"])
+
+    return render_template("modal.html", 
+                           user=user,
+                           messages=messages, 
+                           username=current_user.username,  # Use current_user.username instead of session["username"]
+                           current_user=current_user, 
+                           users_online=users_online_list,
+                           senders=senders, 
+                           received_messages=received_messages,
+                           receiver=receiver)
+
+
 
 
 @app.route("/profile", methods=["GET", "POST"])

@@ -1,82 +1,133 @@
-{% block content %} 
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
 
-    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="../static/css/misc.css">
-    <div class="container mt-5">
-        <div class="mt-5">
-            <h3>Private Messages with {{ receiver.username }}:</h3>
-            <div class="shadow-6 p-3 bg-white" style="height: 400px; overflow-y: scroll;" id="private-messages">
-                {% for message in private_messages %}
-                <div class="d-flex align-items-center mb-2">
-                    {% if message.profile_pic %}
-                    <img src="{{ message.profile_pic }}" alt="Profile Picture" width="30" height="30" class="rounded-circle me-2">
-                    {% endif %}
-                    <div>
-                        <strong>{{ message.display_name }}</strong>: {{ message.content }}
-                    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- Flask's CSRF token for secured POST requests -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- Define Styles -->
+
+    <link rel="stylesheet" href="../static/assets/css/app.min.css">
+    <!-- Define Scripts -->
+    <link rel="stylesheet" href="../static/assets/css/vendor.min.css">
+    <script src="../static/js/socket.io.min.js"></script>
+    <script>
+        var socket = io.connect();  // This is the connection to client-side socket.io!
+        console.log('Connected to the server.');
+    </script>
+    <script src="../static/js/users_update.js"></script>
+</head>
+
+<body class="bg-gradient">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div id="notificationList">
+                    <div id="notificationCount"></div>
                 </div>
-                {% endfor %}
-            </div>
-            <div class="my-4">
-                <div id="chatbox">
-                <form id="private-chat-form" class="chatbox">
-                    <div class="input-group">
-                        <input type="text" id="private-message-input" placeholder="Type your message" class="form-control" style="resize: none;" rows="1"/>
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">Send</button>
+                <div class="col-xl-8">
+                    <div class="card">
+                        <div class="card-header bg-none fw-bold d-flex align-items-center">
+                            <a href="#" class="ms-auto text-muted text-decoration-none" data-toggle="card-expand"
+                                data-height="400px">
+                                <i class="fa fa-expand"></i>
+                            </a>
                         </div>
                     </div>
-                </form>
-                <div class="text-center">
-                    <a href="/" class="btn btn-secondary mt-4">Back to Global Chat</a>
-                    <a href="/logout" class="btn btn-danger mt-4">Logout</a>
+                    <ul>
+                        {% for sender in senders %}
+                        {% if loop.index <= 10 %} <li><a href="{{ url_for('private_chat', receiver_id=sender.id) }}">{{
+                                sender.username }}</a></li>
+                            {% endif %}
+                            {% endfor %}
+                    </ul>
+
+                    <h2>All Received Messages:</h2>
+                    <ul>
+                        {% for message in received_messages %}
+                        {% if loop.index <= 10 %} <li><strong>{{ message.sender.username }}:</strong> {{ message.content
+                            }} <small>{{ message.timestamp }}</small></li>
+                            {% endif %}
+                            {% endfor %}
+                    </ul>
+
+
+
+
+                    <!-- Online users section -->
+                    <div class="card">
+                        <div class="card-header bg-none fw-bold d-flex align-items-center">
+                            <h3>Online Users:</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="notificationElement"></div>
+                            <div class="messenger-list" id="update_user_list">
+                                <a href="{{ url_for('private_chat', receiver_id=user.id) }}"
+                                    data-toggle="messenger-content"></a>
+                                {% for user in users_online %}
+                                class="messenger-link">
+                                <div class="messenger-media">
+                                    <img src="{{ url_for('static', filename=(user.profile_pic if user.profile_pic else 'uploads/default_image.webp')) }}"
+                                        alt="{{ (user.display_name if user.display_name else 'Default User') }}"
+                                        width="50" class="card-img">
+                                </div>
+                                <div class="messenger-info">
+                                    <div class="messenger-name">{{ user.display_name or user.username }}</div>
+                                    <div class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Options</a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="/profile/{{ user.id }}">View Profile</a>
+                                            <a class="dropdown-item"
+                                                href="{{ url_for('private_chat', receiver_id=user.id) }}">Chat with {{
+                                                user.username or user.display_name }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <style>
+                        .modal-backdrop {
+                            z-index: 0;
+                        }
+                    </style>
+                    ]<div class="modal fade " id="userModal" aria-hidden="true" aria-labelledby="userModalLabel"
+                        tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="userModalLabel">User Profile</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <img id="userModalImage" src="" alt="User Profile Image" width="100"
+                                        class="img-fluid">
+                                    <h6 id="userModalName"></h6>
+
+                                    <div class="modal-footer">
+
+                                        <a class="btn btn-outline-inverse"
+                                            href="{{ url_for('profile', user_id=user.id) }}">View Profile</a>
+                                        <a class="btn grad4 btn-outline-black"
+                                            href="{{ url_for('private_chat', receiver_id=user.id) }}">Private Chat</a>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            </div>
-    <script>
-    const socket = io.connect(location.origin);
-    socket.on("connect", () => {
-        socket.emit("join", { user_id: "{{ current_user.id }}" });
-    });
+                <script src="../static/assets/js/app.min.js"></script>
+                <script src="../static/assets/js/vendor.min.js"></script>
+                <script src="../static/js/bootstrap.bundle.min.js"></script>
+</body>
 
-    const privateMessageForm = document.getElementById("private-chat-form");
-    const privateMessageInput = document.getElementById("private-message-input");
-    const privateMessagesList = document.getElementById("private-messages");
-
-    privateMessageForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const message = privateMessageInput.value.trim();
-        if (message) {
-            socket.emit("send_private_message", { 
-                sender_id: "{{ current_user.id }}",
-                receiver_id: "{{ receiver.id }}",
-                message 
-            });
-            privateMessageInput.value = "";
-        }
-    });
-
-    socket.on('private_message', function(data) {
-        const messageElement = document.createElement("div");
-        messageElement.classList.add("d-flex", "align-items-center", "mb-2");
-        messageElement.innerHTML = `<strong>${data.display_name || data.from}</strong>: ${data.message}`;
-        privateMessagesList.appendChild(messageElement);
-        scrollBottom();
-    });
-
-   function scrollBottom() {
-    const privateMessages = document.getElementById("private-messages");    
-    privateMessages.scrollTop = privateMessages.scrollHeight;
-   }
-
-
- 
-    window.onload = function() {
-    privateMessageInput.focus();
-    scrollBottom();
-    };  
-
-    </script>   
-{% endblock %}  
-
-
+</html>
