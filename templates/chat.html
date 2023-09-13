@@ -1,0 +1,63 @@
+
+    <div class="messenger-content">
+      <div class="messenger-content-header">
+        <div class="messenger-content-header-mobile-toggler">
+          <a href="#" data-toggle="messenger-content" class="me-2">
+            <i class="bi bi-chevron-left"></i>
+          </a>
+          <a href="#" class="btn btn-link"><i class="bi bi-search"></i></a>
+          <div class="dropdown">
+            <a href="#" class="btn btn-link" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+            <div class="dropdown-menu fs-12px fw-bold">
+              <a href="#" class="dropdown-item d-flex align-items-center"><i class="bi bi-pencil-square fs-14px my-n1 me-2"></i> EDIT</a>
+              <a href="#" class="dropdown-item d-flex align-items-center"><i class="bi bi-info-circle fs-14px my-n1 me-2"></i> INFO</a>
+              <a href="#" class="dropdown-item d-flex align-items-center"><i class="bi bi-bell-slash fs-14px my-n1 me-2"></i> MUTE</a>
+              <a href="#" class="dropdown-item d-flex align-items-center"><i class="bi bi-x-circle fs-14px my-n1 me-2"></i> CLEAR CHAT HISTORY</a>
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item d-flex align-items-center text-danger"><i class="bi bi-trash fs-14px my-n1 me-2"></i> DELETE AND LEAVE</a>
+            </div>
+          </div>
+        </div>
+        <!-- ... your header content ... -->
+      </div>
+
+      <div class="messenger-content-body invisible">
+        <div data-scrollbar="true" data-height="100%">
+          <div class="widget-chat" id="chatbox">
+            <div class="widget-chat-date">TODAY</div>
+            {% for message in messages %}
+            <div class="widget-chat-item">
+              <div class="widget-chat-media">
+                <img src="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.webp')) }}" alt="{{ (message.sender.display_name if message.sender.display_name else 'Default User') }}" width="30" class="card-img">
+              </div>
+              <div class="widget-chat-content">
+                <div>
+                </div>
+                <div class="widget-chat-name">{{ message.sender.display_name or message.sender.username }}</div>
+                <div class="widget-chat-message last">
+                  {{ message.content }}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="messenger-content-footer">
+        <div class="input-group input-group-lg position-relative z-3">
+          <button class="btn text-inverse position-absolute start-0" id="trigger"><i class="fa fa-smile-o" aria-hidden="true"></i></button>
+          <input type="text" class="form-control rounded-start ps-45px" id="message" placeholder="Write a message..." onkeydown="checkKey(event)">
+          <button class="btn btn-outline-default" onclick="sendMessage()" id="message-button"><i class="fa fa-paper-plane text-muted"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card-arrow">
+  <div class="card-arrow-top-left"></div>
+  <div class="card-arrow-top-right"></div>
+  <div class="card-arrow-bottom-left"></div>
+  <div class="card-arrow-bottom-right"></div>
+</div>

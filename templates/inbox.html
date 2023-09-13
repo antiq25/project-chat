@@ -9,7 +9,7 @@
     <h2>Conversations:</h2>
     <ul>
     {% for sender in senders %}
-        <li><a href="{{ url_for('private_chat', receiver_id=sender.id) }}">{{ sender.username }}</a></li>
+        <li><a href="{{ url_for('private_chat', receiver_id=receiver.id) }}">{{ sender.username }}</a></li>
     {% endfor %}
     </ul>
 
