@@ -1,10 +1,25 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<div id="app" class="app app-content-full-width app-sidebar-collapsed">
-<div id="header" class="app-header bg-gradient-gray-700">
+<link rel="stylesheet" href="../static/css/mdb.dark.min.css">
+<link rel="stylesheet" href="../static/assets/css/vendor.min.css">
+<link rel="stylesheet" href="../static/assets/css/app.min.css">
+
+
+<link rel="stylesheet" href="../static/css/style.css">
+<link rel="stylesheet" href="../static/assets/webfonts/fa-brands-400.ttf">
+<script src="../static/js/socket.io.min.js"></script>
+<script>
+  var socket = io.connect();
+</script>
+
+  
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
+  <div id="app" class="app app-content-full-width app-sidebar-collapsed">
+    <div id="header" class="app-header bg-gradient-gray-700">
 <div class="desktop-toggler">
-<button type="button" class="menu-toggler" data-toggle-class="app-sidebar-collapsed" data-dismiss-class="app-sidebar-toggled" data-toggle-target=".app">
+  <button type="button" class="menu-toggler" data-toggle-class="app-sidebar-collapsed" data-dismiss-class="app-sidebar-toggled" data-toggle-target=".app">
 <span class="bar"></span>
 <span class="bar"></span>
 <span class="bar"></span>
@@ -12,15 +27,15 @@
 </div>
 
 <div class="mobile-toggler">
-<button type="button" class="menu-toggler" data-toggle-class="app-sidebar-mobile-toggled" data-toggle-target=".app">
-<span class="bar"></span>
-<span class="bar"></span>
-<span class="bar"></span>
-</button>
+  <button type="button" class="menu-toggler" data-toggle-class="app-sidebar-mobile-toggled" data-toggle-target=".app">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
 </div>
 <div class="brand">
-<a href="index-2.html" class="brand-logo">
-<span class="brand-img">
+  <a href="index-2.html" class="brand-logo">
+    <span class="brand-img">
 <span class="brand-img-text text-theme">EQ</span>
 </span>
 <span class="brand-text">eq network</span>
@@ -31,18 +46,15 @@
 {% include 'menu.html' %}
 {% include 'chat.html' %}
 {% include 'modals.html' %}
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mainModal">
-    Open Main Modal
-  </button>
 
-    <script src="../static/js/pace.min.js"></script>
-                <script src="../static/js/jquery.min.js"></script>
-                <script src="../static/js/jqueryui.js"></script>
-                <script src="../static/js/bootstrap.bundle.min.js"></script>
-                <script src="../static/js/jscookie.min.js"></script>
-                <script src="../static/js/perfectscroll.js"></script>
-                <script src="../static/assets/js/app.min.js"></script>
-                <script type="module" src="../static/js/page-messenger.demo.js"></script>
+
+
+  
+<script src="../static/js/mdb.min.js"></script>
+<script src="../static/assets/js/app.min.js"></script>
+<script src="../static/assets/js/vendor.min.js"></script>
+<script type="module" src="../static/js/page-messenger.demo.js"></script>
+
               </div>
             </div>
           </div>

@@ -1,3 +1,5 @@
+{% block content %}
+      <script src="../static/js/socket.js"></script>
 
     <div class="messenger-content">
       <div class="messenger-content-header">
@@ -46,7 +48,7 @@
 
       <div class="messenger-content-footer">
         <div class="input-group input-group-lg position-relative z-3">
-          <button class="btn text-inverse position-absolute start-0" id="trigger"><i class="fa fa-smile-o" aria-hidden="true"></i></button>
+          <button class="btn text-inverse position-absolute start-0" id="trigger"><i class="fa fa-smile" aria-hidden="true"></i></button>
           <input type="text" class="form-control rounded-start ps-45px" id="message" placeholder="Write a message..." onkeydown="checkKey(event)">
           <button class="btn btn-outline-default" onclick="sendMessage()" id="message-button"><i class="fa fa-paper-plane text-muted"></i></button>
         </div>
@@ -61,3 +63,5 @@
   <div class="card-arrow-bottom-left"></div>
   <div class="card-arrow-bottom-right"></div>
 </div>
+
+{% endblock %}

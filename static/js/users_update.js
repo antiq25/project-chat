@@ -1,99 +1,9 @@
-
-const currentUserId = "{{ current_user }}";
-
-const user = "{{ receiver.id }}"; 
-
-
-
-
-
-
-
-
-
-
-const clearInboxBtn = document.getElementById("clearInboxBtn");
-
-if (clearInboxBtn) {  // Ensure the button exists
-    clearInboxBtn.addEventListener("click", () => {
-        // Retrieve the CSRF token from the meta tag (assuming you're using Flask-WTF or similar)
-        const csrfMetaTag = document.querySelector('meta[name="csrf-token"]');
-        const csrfToken = csrfMetaTag ? csrfMetaTag.getAttribute('content') : null;
-
-        if (!csrfToken) {
-            console.error("CSRF token not found.");
-            return;
-        }
-
-        fetch("/clear_inbox", {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": csrfToken
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => {
-                    console.error("Response text:", text);
-                    throw new Error(`Server responded with status ${response.status}: ${text}`);
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.status === "success") {
-                console.log("Successfully cleared inbox.");
-                window.location.href = "/"; // Redirect to the inbox route
-            } else {
-                console.error("Server responded without success. Full response:", data);
-            }
-        })
-        .catch(error => {
-            console.error("Error clearing inbox:", error);
-        });
-    });
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    if (sessionStorage.getItem("openModalAfterReload") === "true") {
-        const inboxModal = new bootstrap.Modal(document.getElementById('inboxModal'));
-        inboxModal.show();
-        sessionStorage.removeItem("openModalAfterReload");
-    }
-});
-
-function fetchPrivateMessages(userId) {
-    fetch(`/private_messages/${userId}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-
-        const messagesList = document.getElementById("privateMessagesList");
-        messagesList.innerHTML = '';  // Clear current messages
-
-        data.messages.forEach(message => {
-            const messageDiv = document.createElement("div");
-            messageDiv.classList.add("message");
-            messageDiv.innerText = message.content;
-            messagesList.appendChild(messageDiv);
-        });
-    })
-    .catch(error => {
-        console.error("Error fetching private messages:", error);
-    });
-}
-
-
 // START NOTIFICATIONS //////////////////////////////////////////////
+
+
 document.addEventListener("DOMContentLoaded", function() {
     fetchAndDisplayUnreadNotifications();
-    checkForNewPrivateMessages();
     setInterval(fetchAndDisplayUnreadNotifications, 5000);
-    setInterval(checkForNewPrivateMessages, 5000);
 });
 
 function fetchAndDisplayUnreadNotifications() {
@@ -106,15 +16,36 @@ function fetchAndDisplayUnreadNotifications() {
     .then(response => response.json())
     .then(data => {
         if (data.notifications && Array.isArray(data.notifications)) {
-            data.notifications.forEach(notification => {
-                displayNotificationInUI(notification);
-            });
+            if (data.notifications.length > 0) {
+                localStorage.setItem('hasNewNotification', 'true');  // Setting a flag
+                showDot();
+                data.notifications.forEach(notification => {
+                    displayNotificationInUI(notification);
+                });
+            }
         } else {
             console.error('No notifications array in the response or the response structure is unexpected:', data);
         }
     })
     .catch(error => console.error('Error fetching unread notifications:', error));
 }
+
+
+function showDot() {
+    const dot = document.getElementById('notificationDot');
+    if (localStorage.getItem('hasNewNotification') === 'true') {
+        dot.style.display = 'inline-block';
+    } else {
+        dot.style.display = 'none';
+    }
+}
+
+function hideDot() {
+    localStorage.removeItem('hasNewNotification');
+    const dot = document.getElementById('notificationDot');
+    dot.style.display = 'none';
+}
+
 
 function displayNotificationInUI(notification) {
     console.log("Displaying notification with data:", notification);
@@ -132,9 +63,10 @@ function displayNotificationInUI(notification) {
 
     const notificationElement = document.createElement('div');
     notificationElement.innerHTML = `
-        <strong>Notification:</strong> ${notification.content}
-        <small>${new Date(notification.timestamp).toLocaleTimeString()}</small>
+        <div class="alert alert-primary">Notification:</div> ${notification.content}
+        <span>${new Date(notification.timestamp).toLocaleTimeString()}</span>
         <button class="btn btn-sm btn-outline-danger mt-2" onclick="markNotificationAsRead(this)">Close</button>
+        </div>
     `;
     notificationElement.setAttribute('data-id', notification.id);
     notificationList.appendChild(notificationElement);
@@ -216,3 +148,29 @@ socket.on('notification', function(data) {
     displayNotificationInUI(data);
 });
 // END NOTIFICATIONS ///////////////
+
+document.addEventListener("DOMContentLoaded", function() {
+    fetchAndDisplayUnreadNotifications();
+    checkForNewPrivateMessages();
+    setInterval(fetchAndDisplayUnreadNotifications, 5000);
+    setInterval(checkForNewPrivateMessages, 5000);
+    showDot();  // Call this here
+});
+
+// Assuming you've already established a connection to the socket
+socket.on('notification_read', function(data) {
+    console.log("Notification read event received for ID:", data.notification_id);
+    
+    // Remove the specific notification from the UI
+    const readNotification = document.querySelector(`[data-id="${data.notification_id}"]`);
+    if (readNotification) {
+        readNotification.remove();
+    }
+    
+    // Check if there are any more notifications left
+    const remainingNotifications = document.querySelectorAll('[data-id]');
+    if (remainingNotifications.length === 0) {
+        // If no notifications are left, hide the red dot
+        document.getElementById('redDot').style.display = 'none';
+    }
+});

@@ -1,4 +1,9 @@
- -->
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mainModal">
+  Open Main Modal
+</button>
+
+
 <div class="modal fade bg-gradient" id="userModal" aria-hidden="true" aria-labelledby="userModalLabel" tabindex="-1">
     <div class="modal-dialog modal-sm modal-dialog-centered">
       <div class="modal-content">
@@ -10,7 +15,7 @@
           <img id="userModalImage" src="" alt="User Profile Image" width="100" class="img-fluid">
           <h6 id="userModalName"></h6>
        
-          <div class="modal-footer">
+        <div class="modal-footer">
          
         <a class="btn btn-outline-inverse" href="{{ url_for('profile', user_id=user.id) }}">View Profile</a>
         <a class="btn grad4 btn-outline-black" href="{{ url_for('private_chat', receiver_id=user.id) }}">Private Chat</a>
@@ -34,22 +39,6 @@
           <img id="userModalImage" src="" alt="User Profile Image" width="100" class="img-fluid">
           <h6 id="userModalName"></h6>
           <div class="modal-footer">
-                        {% for user in users_online %}
-                          <a href="{{ url_for('private_chat', receiver_id=user.id) }}" data-toggle="messenger-content">
-                            <div class="messenger-media">
-                              <img src="{{ url_for('static', filename=(user.profile_pic if user.profile_pic else 'uploads/default_image.webp')) }}" alt="{{ (user.display_name if user.display_name else 'Default User') }}" width="10" class="card-img">
-                            </div>
-                            <div class="messenger-info">
-                              <div class="messenger-name">{{ user.display_name or user.username }}</div>
-                              <div class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Options</a>
-                                <div class="dropdown-menu">
-                                  <a class="btn btn-outline-inverse" href="{{ url_for('profile', user_id=user.id) }}">View Profile</a                                  <a href="{{ url_for('private_chat', receiver_id=user.id) }}">Chat with {{ user.username or user.display_name }}</a>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                        {% endfor %}
             <a class="btn btn-outline-inverse" href="{{ url_for('profile', user_id=user.id) }}">View Profile</a>
             <a class="btn grad4 btn-outline-black" href="{{ url_for('private_chat', receiver_id=user.id) }}">Private Chat</a>
           </div>
@@ -69,8 +58,6 @@
           <div class="card">
             <div class="card-body">
               <div class="col">
-                <div id="notificationList">
-                  <div id="notificationCount"></div>
                 </div>
                 <div class="col">
                     <div class="card">

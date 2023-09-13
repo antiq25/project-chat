@@ -24,10 +24,12 @@ var handleRenderPickmo = function() {
   });
 
   picker.addEventListener('emoji:select', (selection) => {
-    $('#input').val($('#input').val() + selection.emoji)
+    $('#message').val($('#message').val() + selection.emoji)
 
-    selectionContainer.classList.remove('empty');
-  });
+    if (selectionContainer) {
+      selectionContainer.classList.remove('d-none');
+  }
+    });
 };
 
 var handleChatScrollBottom = function() {

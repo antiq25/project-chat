@@ -1,7 +1,3 @@
-var socket = io.connect();  // This is the connection to client-side socket.io!
-console.log('Connected to the server.');
-
-
 socket.on('broadcast_message', function (data) {
     var chatbox = document.getElementById('chatbox');
     var displayName = data.display_name || data.username; 

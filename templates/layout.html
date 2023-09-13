@@ -9,29 +9,24 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
+  
   <!-- App favicon -->
   <link rel="shortcut icon" type="text/css" href="../static/uploads/default_image.png">
 
   <!-- CSS -->
-
-  <link href="../static/assets/css/vendor.min.css" rel="stylesheet">  
-  <link href="../static/assets/css/app.min.css" rel="stylesheet">
   
-  <link href="../static/css/style.css" rel="stylesheet">
   <link rel="stylesheet" href="../static/assets/webfonts/fa-brands-400.ttf">
-    <!--  -->
 
-<script src="../static/js/socket.io.min.js"></script>
-<script src="../static/js/socket.js"></script>
-<script src="../static/js/users_update.js"></script>
-  <!-- Fonts -->
-</head>
-<body class="text-dark bg-gradient shadow-6-soft">
+  <link rel="stylesheet" href="../static/css/mdb.min.css">
+  <link rel="stylesheet" href="../static/assets/css/vendor.min.css">
+  <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="stylesheet" href="../static/app.min.css">
+  </head>
 
+    {% block content %}
     
-  {% block content %}
-  {% endblock %}
-
+    {% endblock %}
+    
 </body>
+
 </html>
