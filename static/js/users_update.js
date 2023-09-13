@@ -3,75 +3,10 @@ const currentUserId = "{{ current_user }}";
 
 const user = "{{ receiver.id }}"; 
 
-socket.on('update_user_list', function(data) {
-    const users = data.users;
-    const userList = document.getElementById('update_user_list');
-    userList.innerHTML = '';  // Clear the current list
-
-    users.forEach(user => {
-      const div = document.createElement('div');
-      div.classList.add('messenger-item');
-
-      const userLink = document.createElement('a');
-      userLink.href = '#';
-      userLink.dataset.toggle = 'messenger-content';
-      userLink.classList.add('messenger-link');
-
-      // Create user image
-      const userImage = document.createElement('div');
-      userImage.classList.add('messenger-media', 'bg-theme', 'text-theme-color', 'rounded-pill', 'fs-24px', 'fw-bold');
-
-      const img = document.createElement('img');
-      img.src = user.profile_pic || '/static/uploads/default_image.webp';
-      img.alt = user.display_name || 'Default User';
-      img.width = 50;
-      img.classList.add('rounded-circle');
-
-      // Add click event to the image to show modal
-      img.addEventListener('click', function() {
-          showModal(user);
-      });
-
-      userImage.appendChild(img);
-
-      // User Info
-      const userInfo = document.createElement('div');
-      userInfo.classList.add('messenger-info');
-
-      const userName = document.createElement('div');
-      userName.classList.add('messenger-name');
-      userName.innerText = user.display_name || user.username;
-
-      const userText = document.createElement('div');
-      userText.classList.add('messenger-text');
-      userText.innerText = 'Click to chat';  // Placeholder text, change as needed
-
-      userInfo.appendChild(userName);
-      userInfo.appendChild(userText);
-
-      // Appending elements to the main link
-      userLink.appendChild(userImage);
-      userLink.appendChild(userInfo);
-      div.appendChild(userLink);
-
-      userList.appendChild(div);
-    });
-});
 
 
 
 
-
-function showModal(user) {
-    const modalImage = document.getElementById("userModalImage");
-    const modalName = document.getElementById("userModalName");
-
-    modalImage.src = user.profile_pic || '/static/uploads/default_image.webp';
-    modalName.textContent = user.display_name || user.username;
-
-    const userModal = new bootstrap.Modal(document.getElementById('userModal'));
-    userModal.show();
-}
 
 
 
