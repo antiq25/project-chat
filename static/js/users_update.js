@@ -1,11 +1,5 @@
 // START NOTIFICATIONS //////////////////////////////////////////////
 
-
-document.addEventListener("DOMContentLoaded", function() {
-    fetchAndDisplayUnreadNotifications();
-    setInterval(fetchAndDisplayUnreadNotifications, 5000);
-});
-
 function fetchAndDisplayUnreadNotifications() {
     fetch("/fetch_notifications", {
         method: 'GET',
@@ -102,7 +96,6 @@ function markNotificationAsRead(element) {
     const notificationId = notificationElement.getAttribute('data-id');
 
     console.log("Trying to mark notification with ID:", notificationId, "as read.");
-
     const url = '/mark_notification_read/' + notificationId;
 
     // Fetch the CSRF token from the meta tag
@@ -119,17 +112,7 @@ function markNotificationAsRead(element) {
             'X-CSRFToken': csrfToken
         }
     })
-
-    .then(response => {
-        // If the response is not OK, log the response text for more details
-        if (!response.ok) {
-            return response.text().then(text => {
-                console.error("Server responded with details:", text);
-                throw new Error(`Server responded with status: ${response.status}`);
-            });
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         if (data.status === "success") {
             console.log("Successfully marked notification as read.");
@@ -142,6 +125,7 @@ function markNotificationAsRead(element) {
         console.error('Fetch error:', error);
     });
 }
+
 
 socket.on('notification', function(data) {
     console.log("Notification data received:", data);

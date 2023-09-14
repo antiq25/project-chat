@@ -1,20 +1,19 @@
-{% block content %}
-<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
-    #notificationDot {
-      position: relative;
-      display: block;
-      opacity: 0.8; 
+  #notificationDot {
+    position: relative;
+    display: block;
+    top: 10px; /* Adjust to fit your design */
+    right: 10px; /* Adjust to fit your design */
+      width: 10px;
+      height: 10px;
       border-radius: 50; /* Makes it a circle */
     }
     
     
-    
-    
+
     .hidden {
-     
-      display: none !important;
+      display: none;
     }
     
     .show {
@@ -23,10 +22,11 @@
 
 
   </style>
-  <script src="../static/js/userlist.js"></script>
+
   <script src="../static/js/users_update.js"></script>
-<div class="menu">
-  <div class="menu-item dropdown">
+  <script src="../static/js/userlist.js"></script>
+  <div class="menu">
+    <div class="menu-item dropdown">
     <a href="#" data-toggle-class="app-header-menu-search-toggled" data-toggle-target=".app" class="menu-link">
       <div class="menu-icon"><i class="bi bi-search nav-icon"></i></div>
     </a>
@@ -44,17 +44,17 @@
               <i class="bi bi-envelope h2 opacity-5 d-block my-1"></i>
             </div>
             <div class="fw-500 fs-10px text-inverse">INBOX</div>
-            </a>
-          </div>
-          <div class="col-4">
-            <a href="pos_customer_order.html" target="_blank" class="dropdown-item text-decoration-none p-3 bg-none">
-              <div><i class="bi bi-hdd-network h2 opacity-5 d-block my-1"></i></div>
-              <div class="fw-500 fs-10px text-inverse">POS SYSTEM</div>
-            </a>
-          </div>
-          <div class="col-4">
-            <a href="calendar.html" class="dropdown-item text-decoration-none p-3 bg-none">
-              <div><i class="bi bi-calendar4 h2 opacity-5 d-block my-1"></i></div>
+          </a>
+        </div>
+        <div class="col-4">
+          <a href="pos_customer_order.html" target="_blank" class="dropdown-item text-decoration-none p-3 bg-none">
+            <div><i class="bi bi-hdd-network h2 opacity-5 d-block my-1"></i></div>
+            <div class="fw-500 fs-10px text-inverse">POS SYSTEM</div>
+          </a>
+        </div>
+        <div class="col-4">
+          <a href="calendar.html" class="dropdown-item text-decoration-none p-3 bg-none">
+            <div><i class="bi bi-calendar4 h2 opacity-5 d-block my-1"></i></div>
               <div class="fw-500 fs-10px text-inverse">CALENDAR</div>
             </a>
           </div>
@@ -86,15 +86,17 @@
     </div>
     <div class="menu-item dropdown dropdown-mobile-full">
       <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
-        <div class="menu-icon"><i class="bi bi-bell nav-icon" id="notificationDot" onclick="hideDot()" style="display:none;">•</i></div>
+        <span id="notificationDot" onclick="hideDot()" style="display:none;">•</span>
+        <span id="notificationCount"></span>
+        <div class="menu-icon"><i class="bi bi-bell nav-icon"></i></div>
         <div class="dropdown-menu dropdown-menu-end mt-1 w-300px fs-11px pt-1">
           <h6 class="dropdown-header fs-10px mb-1">NOTIFICATIONS</h6>
           <div class="dropdown-divider mt-1"></div>
-          <div id="notificationList"></div>
           <div href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
             <div class="fs-20px">
               <i class="bi bi-bag text-theme"></i>
-        </a>
+              <div id="notificationList"></div>
+            </a>
           </div>
         </div>
         <div class="dropdown-divider mt-1"></div>
@@ -165,13 +167,13 @@
           <a href="helper.html" class="menu-link">
             <span class="menu-icon"><i class="bi bi-gem"></i></span>
             <span class="menu-text">Helper</span>
-              </a>
-            </div>
-          </div>
+          </a>
         </div>
       </div>
     </div>
   </div>
+</div>
+</div>
 </div>
 
 
@@ -201,9 +203,9 @@
               </div>
             </div>
           </div>
-            </div>
-          </div>
-        </div> 
-        {% endblock %}
-        
-        <!-- end sidebar  -->
+        </div>
+      </div>
+    </div> 
+
+    
+    <!-- end sidebar  -->

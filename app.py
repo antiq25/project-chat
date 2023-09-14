@@ -306,25 +306,27 @@ def unread_messages_count():
     count = Message.query.filter_by(receiver_id=user.id, read=False).count()
     return jsonify({"count": count})
 
+
+
 @app.route("/mark_notification_read/<int:notification_id>", methods=["POST"])
 def mark_notification_read(notification_id):
     print(f"Attempting to mark notification {notification_id} as read.")
-
     notification = Notification.query.get(notification_id)
 
-
     if not notification:
-        print(f"Notification {notification_id} not found.")  # Debugging statement
+        print(f"Notification {notification_id} not found.")
         return jsonify({"status": "error", "message": "Notification not found"}), 404
 
     try:
         notification.read = True
         db.session.commit()
-        print(f"Notification {notification_id} marked as read.")  # Debugging statement
+        print(f"Notification {notification_id} marked as read.")
         return jsonify({"status": "success"})
     except Exception as e:
         print(f"Error while marking notification {notification_id} as read: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
 
 @app.route("/fetch_notifications")
 def fetch_notifications():
@@ -386,9 +388,9 @@ def private_chat(receiver_id):
 def get_current_user():
     if "user_id" in session:
         user = User.query.get(session["user_id"])
-        print(f"Fetching user: {user.username}")
-        return user
-    return None
+    
+    return user
+
 
 
 
