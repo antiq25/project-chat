@@ -1,11 +1,12 @@
 
 
-@import '/static/assets/css/app.min.css'; 
-@import '/static/assets/css/vendor.min.css';
+div {
+  color: black;
+}
 
-
-
-
+p {
+  color: #000 !important;
+}
 
 #chatbox::-webkit-scrollbar {
   display: none;
@@ -20,7 +21,6 @@
 }
 
 /*  */
-
 
 
 

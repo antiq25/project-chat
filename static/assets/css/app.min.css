@@ -18310,9 +18310,7 @@ fieldset:disabled .btn {
 :root,
 [data-bs-theme=light] {
     --bs-body-bg-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.99) 100%);
-    --bs-body-bg-image: url("images/pattern.png");
     --bs-body-bg-image-size: 4.6875rem;
-    --bs-body-bg-cover: url("images/cover.jpg");
     --bs-body-font-weight: 400;
     --bs-body-letter-spacing: 0.046875rem;
     --bs-component-bg: #FFFFFF;
@@ -18340,9 +18338,7 @@ fieldset:disabled .btn {
 
 [data-bs-theme=dark] {
     --bs-body-bg-gradient: linear-gradient(180deg, rgba(50, 70, 80, 0.9) 0%, rgb(13, 16, 27) 100%);
-    --bs-body-bg-image: url("images/pattern-dark.png");
     --bs-body-bg-image-size: 4.6875rem;
-    --bs-body-bg-cover: url("images/cover-dark.jpg");
     --bs-body-font-weight: 300;
     --bs-body-letter-spacing: 0.046875rem;
     --bs-component-bg: #28292b;
@@ -18422,7 +18418,6 @@ body:before {
     height: 100%;
     background-attachment: initial;
     background-color: transparent;
-    background-image: var(--bs-body-bg-image);
     background-size: var(--bs-body-bg-image-size);
     background-repeat: repeat;
     background-attachment: initial;
