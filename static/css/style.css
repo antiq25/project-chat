@@ -1,12 +1,5 @@
 
 
-div {
-  color: black;
-}
-
-p {
-  color: #000 !important;
-}
 
 #chatbox::-webkit-scrollbar {
   display: none;
