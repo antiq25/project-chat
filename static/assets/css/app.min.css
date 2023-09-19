@@ -182,7 +182,7 @@
     color-scheme: dark;
     --bs-body-color: rgba(255, 255, 255, 0.75);
     --bs-body-color-rgb: 255, 255, 255;
-    --bs-body-bg: #1d2835;
+    --bs-body-bg: #020303;
     --bs-body-bg-rgb: 29, 40, 53;
     --bs-emphasis-color: #c0cacf;
     --bs-emphasis-color-rgb: 192, 202, 207;
@@ -12659,9 +12659,7 @@ fieldset:disabled .btn {
     background-color: var(--bs-dark-bg-subtle) !important
 }
 
-.bg-gradient {
-    background-image: var(--bs-gradient) !important
-}
+
 
 .user-select-all {
     -webkit-user-select: all !important;
@@ -18309,7 +18307,6 @@ fieldset:disabled .btn {
 
 :root,
 [data-bs-theme=light] {
-    --bs-body-bg-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.99) 100%);
     --bs-body-bg-image-size: 4.6875rem;
     --bs-body-font-weight: 400;
     --bs-body-letter-spacing: 0.046875rem;
@@ -18337,7 +18334,6 @@ fieldset:disabled .btn {
 }
 
 [data-bs-theme=dark] {
-    --bs-body-bg-gradient: linear-gradient(180deg, rgba(50, 70, 80, 0.9) 0%, rgb(13, 16, 27) 100%);
     --bs-body-bg-image-size: 4.6875rem;
     --bs-body-font-weight: 300;
     --bs-body-letter-spacing: 0.046875rem;
@@ -18367,7 +18363,7 @@ fieldset:disabled .btn {
 html {
     height: 100%;
     background-color: var(--bs-body-bg);
-    background-image: var(--bs-body-bg-gradient)
+    background-image: var()
 }
 
 html:before {
@@ -18378,7 +18374,7 @@ html:before {
     right: 0;
     height: 100%;
     z-index: -5;
-    background: var(--bs-body-bg-gradient)
+    background: var()
 }
 
 html:after {
@@ -18390,7 +18386,7 @@ html:after {
     right: 0;
     z-index: -10;
     background-color: var(--bs-body-bg);
-    background-image: var(--bs-body-bg-gradient);
+    background-image: var();
     background-image: var(--bs-body-bg-cover);
     background-repeat: no-repeat;
     background-position: center;
@@ -34121,7 +34117,7 @@ body .note-modal-backdrop {
         width: auto;
         z-index: 1021;
         background: var(--bs-body-bg);
-        background: var(--bs-body-bg-gradient);
+        background: var();
         display: none
     }
 }

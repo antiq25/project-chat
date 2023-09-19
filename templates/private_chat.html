@@ -27,6 +27,8 @@
 <script src="../static/js/socket.io.min.js"></script>
 
 <body class="text-bg-black" onload="document.getElementById('message').focus(); scrollBottom();">
+    <div id="privateChatContent">
+        <!-- Your chat contents -->
 
     <div class="card">
         <div class="card-body bg-black">
@@ -61,7 +63,8 @@
                                         <a href="/logout" class="btn btn-danger mt-4">Logout</a>
                                     </div>
                             </div>
-                        </div>       
+                        </div>  
+                    </div>     
                
     <script>
         const socket = io.connect(location.origin);

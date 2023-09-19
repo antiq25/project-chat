@@ -1,3 +1,6 @@
+let isMenuOpen = false;
+
+
 socket.on('broadcast_message', function (data) {
     var chatbox = document.getElementById('chatbox');
     var displayName = data.display_name || data.username; 
@@ -18,6 +21,7 @@ socket.on('broadcast_message', function (data) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 });
+
 
 
 socket.on('user_joined', function (data) {
@@ -43,12 +47,17 @@ socket.on('user_left', function (data) {
 
 
 // Listen for the display_notification event to show the detailed notification
-
-function checkKey(event) {   // This how the fucken app knows ur typing 
-    if (event.keyCode === 13) { 
-        sendMessage();
+function checkKey(event) {
+    if (event.keyCode === 13) {
+        if (isMenuOpen) {
+            return; // Do nothing if the menu is open
+        } else {
+            sendMessage(); // Execute the `sendMessage` function if the menu is not open
+        }
     }
 }
+
+
 
 function scrollBottom() {
     var chatBox = document.getElementById("chatbox");

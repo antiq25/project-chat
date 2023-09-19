@@ -1,26 +1,16 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<link rel="stylesheet" href="../static/css/mdb.min.css">
-<link rel="stylesheet" href="../static/assets/css/app.min.css">
-<link rel="stylesheet" href="../static/assets/css/vendor.min.css">
 
 
 
-<link rel="stylesheet" href="../static/assets/webfonts/fa-brands-400.ttf">
-
-<script src="../static/js/socket.io.min.js"></script>
-<script>
-  var socket = io.connect();
-</script>
+  <link rel="stylesheet" href="../static/assets/webfonts/fa-brands-400.ttf">
 
   
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-
   <div id="app" class="app app-content-full-width app-sidebar-collapsed">
-    <div id="header" class="app-header bg-gradient">
+    <div id="header" class="app-header">
 <div class="desktop-toggler">
-  <button type="button" class="menu-toggler" data-toggle-class="app-sidebar-collapsed" data-dismiss-class="app-sidebar-toggled" data-toggle-target=".app">
+  <button type  ="button" class="menu-toggler" data-toggle-class="app-sidebar-collapsed" data-dismiss-class="app-sidebar-toggled" data-toggle-target=".app">
 <span class="bar"></span>
 <span class="bar"></span>
 <span class="bar"></span>
@@ -41,19 +31,28 @@
 <span class="brand-text">eq network</span>
 </a>
 </div>
+<style>
+  .chat-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Initially hidden */
+    width: 400px;
+    height: 100%;
+    overflow-y: auto;
+    transition: right 0.3s ease;
+}
 
-
+.chat-sidebar.active {
+    right: 0; /* Show when active */
+}
+</style>
 {% include 'menu.html' %}
 {% include 'chat.html' %}
-{% include 'modals.html' %}
-
 
 
   
-<script type="module" src="../static/js/page-messenger.demo.js"></script>
-<script src="../static/assets/js/app.min.js"></script>
-<script src="../static/js/mdb.min.js"></script>
-<script src="../static/assets/js/vendor.min.js"></script>
+<script src="../static/assets/js/vendor.min.js"></script>        
+<script src="../static/assets/js/app.min3661.js"></script>
 
               </div>
             </div>

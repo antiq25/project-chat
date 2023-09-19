@@ -1,4 +1,11 @@
+<script src="../static/js/socket.io.min.js"></script>
+<script>
+    const socket = io.connect(location.origin);
+        socket.on("connect", () => {
+            socket.emit("join", { user_id: "{{ current_user.id }}" });
+        });
 
+  </script>
 <style>
   #notificationDot {
     position: relative;
@@ -23,8 +30,8 @@
 
   </style>
 
-  <script src="../static/js/users_update.js"></script>
-  <script src="../static/js/userlist.js"></script>
+
+
   
   <div class="menu">
     <div class="menu-item dropdown">
@@ -135,78 +142,198 @@
   
 </div>
 
-<div id="sidebar" class="app-sidebar bg-gradient-black">
-  <div class="app-sidebar-content text-white" data-scrollbar="true" data-height="100%">
-    <div class="menu">
-      <div class="menu-header">Navigation</div>
-      <div class="menu-item">
-        <a href="index-2.html" class="menu-link">
-          <span class="menu-icon"><i class="bi bi-cpu"></i></span>
-          <span class="menu-text">Dashboard</span>
-        </a>
-        <div class="menu-divider"></div>
-        <div class="menu-header">Users</div>
-        <div class="menu-item">
-          <a href="profile.html" class="menu-link">
-            <span class="menu-icon"><i class="bi bi-people"></i></span>
-            <span class="menu-text">Profile</span>
-          </a>
-        </div>
-        <div class="menu-item">
-          <a href="calendar.html" class="menu-link">
-            <span class="menu-icon"><i class="bi bi-calendar4"></i></span>
-            <span class="menu-text">Calendar</span>
-          </a>
-        </div>
-        <div class="menu-item">
-          <a href="settings.html" class="menu-link">
-            <span class="menu-icon"><i class="bi bi-gear"></i></span>
-            <span class="menu-text">Settings</span>
-          </a>
-        </div>
-        <div class="menu-item">
-          <a href="helper.html" class="menu-link">
-            <span class="menu-icon"><i class="bi bi-gem"></i></span>
-            <span class="menu-text">Helper</span>
-          </a>
-        </div>
+<div id="sidebar" class="app-sidebar">
+  <!-- ... Your current navigation ... -->
+
+  <button onclick="toggleChat()" class="btn btn-primary w-85 mb-3">Toggle Chat</button>
+
+  <!-- Chat Content (Initially Hidden) -->
+  <div id="chatContent" style="display: none;">
+      <div class="menu-header">Online Users</div>
+      <div id="onlineUsers" data-scrollbar="true" data-height="100%" class="ps">
+          <!-- JavaScript will populate this with online users -->
       </div>
-    </div>
+      <div id="privateChatContent" style="display: none;">
+        <h3>Private Messages with <span id="receiverUsername"></span>:</h3>
+        <div class="shadow-6" style="height: 400px; overflow-y: scroll;" id="private-messages">
+          {% for message in private_messages %}
+              <div class="widget-chat-content">
+                  {% if message.profile_pic %}
+                  <img src="{{ message.profile_pic }}" alt="Profile Picture" width="30" height="30" class="rounded-circle me-2">
+                  {% endif %}
+                  <div>
+                      <strong>{{ message.display_name }}</strong>: {{ message.content }} 
+                  </div>
+              </div>
+              {% endfor %}
+          </div>
+          <div class="my-4">
+              <div id="chatbox-private">
+                  <form id="private-chat-form" class="chatbox">
+                      <div class="input-group">
+                          <input type="text" id="private-message-input" placeholder="Type your message" class="input bi-input-cursor-text sp-input-container" style="resize: none;" rows="1"/>
+                          <div class="input-group-append">
+                              <button type="submit" class="btn btn-primary">Send</button>
+                          </div>
+                      </div>
+                  </form>
+                  <div class="text-center">
+                      <a href="/" class="btn btn-secondary">Back to Global Chat</a>
+                      <a href="/logout" class="btn btn-danger">Logout</a>
+                  </div>
+          </div>
+      </div>  
+  </div> 
   </div>
 </div>
-</div>
-</div>
 
 
-<!-- Start sidebar -->
 
-<!-- Refractored  -->
-<div class="card h-100">
-  <div class="messenger">
-    <div class="messenger-sidebar">
-      <div class="messenger-sidebar-header">
-        <h3 class="mb-10px">Chats</h3>
-        <div class="position-relative">
-          <button type="submit" class="btn text-inverse position-absolute top-0"><i class="bi bi-search"></i></button>
-          <input type="text" class="form-control rounded-pill ps-35px" placeholder="Search Messenger">
-        </div>
-      </div>
-      <div class="messenger-sidebar-body" id="update_user_list">
-        <div data-scrollbar="true" data-height="100%" class="ps" data-init="true">
-          <!-- Loop to list the online users -->
-          <div class="messenger-sidebar">
-            <div class="messenger-sidebar-header">
-              <h4>Online Users</h4>
-            </div>
-            <div class="messenger-sidebar-body" id="update_user_list">
-              <div data-scrollbar="true" data-height="100%" class="ps">
-                <!-- JavaScript will populate this area with online users -->
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> 
+<!-- Your HTML code here -->
 
-    
-    <!-- end sidebar  -->
+<!-- Your HTML code here -->
+
+<script>
+ let isChatOpen = false;
+let receiverId = null;
+
+function toggleChat() {
+    const chatContent = document.getElementById('chatContent');
+    if (isChatOpen) {
+        chatContent.style.display = 'none';
+        isChatOpen = false;
+    } else {
+        chatContent.style.display = 'block';
+        isChatOpen = true;  // Fixed typo here
+    }
+}
+
+function handlePrivateMessageSubmission(event) {
+    event.preventDefault();
+    const message = privateMessageInput.value.trim();
+    if (message) {
+        socket.emit('send_private_message', {
+            sender_id: "{{ current_user.id }}",
+            receiver_id: receiverId,
+            message,
+        });
+        privateMessageInput.value = '';
+    }
+}
+
+const privateMessageForm = document.getElementById('private-chat-form');
+const privateMessageInput = document.getElementById('private-message-input');
+const privateMessagesList = document.getElementById('private-messages');
+if (!privateMessagesList) {
+    console.error('privateMessagesList element not found!');
+}
+
+
+function appendMessageToChatbox(data) {
+  const messageDiv = document.createElement('div');
+messageDiv.className = 'd-flex align-items-center mb-2';
+
+const strongElement = document.createElement('strong');
+strongElement.textContent = data.display_name || data.from;
+
+messageDiv.appendChild(strongElement);
+
+const messageText = document.createTextNode(`: ${data.message}`);
+messageDiv.appendChild(messageText);
+
+privateMessagesList.appendChild(messageDiv);
+
+}
+
+
+socket.on('private_message', function (data) {
+    console.log("Processing received private message:", data);
+    if (!privateMessagesList) {
+        console.error('privateMessagesList element not found!');
+        return;
+    }
+    appendMessageToChatbox(data);
+    scrollBottom();
+});
+
+const textNode = document.createTextNode("This is a test text node.");
+privateMessagesList.appendChild(textNode);
+
+privateMessagesList.style.display = 'none';
+setTimeout(() => {
+    privateMessagesList.style.display = 'block';
+}, 0);
+
+
+
+function scrollBottom() {
+    const privateMessages = document.getElementById('private-messages');
+    privateMessages.scrollTop = privateMessages.scrollHeight;
+}
+
+window.onload = function () {
+    privateMessageInput.focus();
+    scrollBottom();
+};
+
+privateMessageForm.removeEventListener('submit', handlePrivateMessageSubmission);
+privateMessageForm.addEventListener('submit', handlePrivateMessageSubmission);
+
+function openPrivateChat(userId, username) {
+    receiverId = userId;
+    const receiverUsername = document.getElementById('receiverUsername');
+    if (receiverUsername) { // Check if the element exists
+        receiverUsername.textContent = username;
+    }
+
+    // Fetch chat history
+    fetch(`/chat_history/${userId}`)
+    .then(response => response.json())
+    .then(data => {
+        // Clear existing messages
+        privateMessagesList.innerHTML = '';
+
+        // Populate chat with history
+        data.forEach(message => {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('d-flex', 'align-items-center', 'mb-2');
+            messageElement.innerHTML = `<strong>${message.username}</strong>: ${message.content}`;
+            privateMessagesList.appendChild(messageElement);
+        });
+        scrollBottom();
+    });
+
+    document.getElementById('privateChatContent').style.display = 'block';
+}
+
+
+
+const userElements = document.querySelectorAll('.messenger-user');
+userElements.forEach(function (element) {
+    const userId = element.getAttribute('data-user-id');
+    const username = element.textContent;
+    element.addEventListener('click', function () {
+        openPrivateChat(userId, username);
+    });
+});
+
+
+socket.on('user_menu_opened', function () {
+    if (isChatOpen) {
+        document.getElementById('chatContent').style.display = 'none';
+        isChatOpen = false;
+    }
+});
+
+function showPrivateChat() {
+    const privateChatContent = document.getElementById('privateChatContent');
+    privateChatContent.style.display = 'block';
+}
+
+privateMessagesList.scrollTop = privateMessagesList.scrollHeight;
+
+
+</script>
+
+<script src="../static/js/userlist.js"></script>
+<script src="../static/js/users_update.js"></script>

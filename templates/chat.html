@@ -1,7 +1,6 @@
 {% block content %}
-      <script src="../static/js/socket.js"></script>
 
-    <div class="messenger-content">
+    <div class="messenger-content" onload="document.getElementById('message').focus(); scrollBottom();"></div>">
       <div class="messenger-content-header">
         <div class="messenger-content-header-mobile-toggler">
           <a href="#" data-toggle="messenger-content" class="me-2">
@@ -63,5 +62,7 @@
   <div class="card-arrow-bottom-left"></div>
   <div class="card-arrow-bottom-right"></div>
 </div>
+<script src="../static/js/socket.js"></script>
+<script type="module" src="../static/js/page-messenger.demo.js"></script>
 
 {% endblock %}

@@ -1,41 +1,32 @@
+socket.on('update_user_list', data => {
+    const userListContainer = document.getElementById('onlineUsers');
 
-    // Listen for the 'update_user_list' event from the server
-    socket.on('update_user_list', data => {
-        const userListContainer = document.getElementById('update_user_list').querySelector('.ps');
-        
-        // Clear the current list
-        userListContainer.innerHTML = '';
-        
-        // Populate the list with the updated users
-        data.users.forEach(user => {
-            const userItem = document.createElement('div');
-            userItem.classList.add('messenger-item', 'messenger-user', 'show'); 
+    // Clear the current list
+    userListContainer.innerHTML = '';
 
-            const userPic = user.profile_pic ? user.profile_pic : 'uploads/default_image.webp';
-            const displayName = user.display_name ? user.display_name : user.username;
-            const profileLink = `/profile/${user.id}`;
-            const chatLink = `/private/${user.id}`;
+    // Populate the list with the updated users
+    data.users.forEach(user => {
+        const userItem = document.createElement('div');
+        userItem.classList.add('messenger-item', 'messenger-user', 'show');
 
-            userItem.innerHTML = `
-                <a href="${chatLink}" data-toggle="messenger-content" class="messenger-link">
+        const userPic = user.profile_pic ? user.profile_pic : 'uploads/default_image.webp';
+        const displayName = user.display_name ? user.display_name : user.username;
+        const chatLink = `/private/${user.id}`;
+
+        userItem.innerHTML = `
+            <div class="card-body">
+                <div class="d-flex">
                     <div class="messenger-media">
-                        <img src="${userPic}" alt="${displayName}" width="50" class="card-img rounded-circle">
+                        <img class="img-portrait-xs rounded-3" src="${userPic}" alt="${displayName}" width="50" class="card-img rounded-circle">
+                        <span href="${chatLink}">chat with ${displayName}</span>
                     </div>
-                    <div class="messenger-info">
-                        <div class="messenger-name">${displayName}</div>
-                        <div class="dropdown-backdrop">
-                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Options</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item btn-primary" href="${profileLink}">View Profile</a>
-                                <a class="dropdown-item" href="${chatLink}">Chat with ${displayName}</a>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            `;
+                </div>
+            </div>`;
 
-            userListContainer.appendChild(userItem);
-            setTimeout(() => userItem.classList.add('show'), 100); // Add a slight delay for animation
+        userItem.addEventListener('click', function() {
+            openPrivateChat(user.id, displayName);
         });
-    });
 
+        userListContainer.appendChild(userItem);
+    });
+  });
