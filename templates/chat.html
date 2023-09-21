@@ -1,28 +1,9 @@
-{% block content %}
 
-    <div class="messenger-content" onload="document.getElementById('message').focus(); scrollBottom();"></div>">
-      <div class="messenger-content-header">
-        <div class="messenger-content-header-mobile-toggler">
-          <a href="#" data-toggle="messenger-content" class="me-2">
-            <i class="bi bi-chevron-left"></i>
-          </a>
-          <a href="#" class="btn btn-link"><i class="bi bi-search"></i></a>
-          <div class="dropdown">
-            <a href="#" class="btn btn-link" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-            <div class="dropdown-menu fs-12px fw-bold">
-              <a href="#" class="dropdown-item d-flex align-items-center"><i class="bi bi-pencil-square fs-14px my-n1 me-2"></i> EDIT</a>
-              <a href="#" class="dropdown-item d-flex align-items-center"><i class="bi bi-info-circle fs-14px my-n1 me-2"></i> INFO</a>
-              <a href="#" class="dropdown-item d-flex align-items-center"><i class="bi bi-bell-slash fs-14px my-n1 me-2"></i> MUTE</a>
-              <a href="#" class="dropdown-item d-flex align-items-center"><i class="bi bi-x-circle fs-14px my-n1 me-2"></i> CLEAR CHAT HISTORY</a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item d-flex align-items-center text-danger"><i class="bi bi-trash fs-14px my-n1 me-2"></i> DELETE AND LEAVE</a>
-            </div>
-          </div>
-        </div>
+
         <!-- ... your header content ... -->
       </div>
 
-      <div class="messenger-content-body invisible">
+      <div class="messenger-content-body">
         <div data-scrollbar="true" data-height="100%">
           <div class="widget-chat" id="chatbox">
             <div class="widget-chat-date">TODAY</div>
@@ -34,7 +15,7 @@
               <div class="widget-chat-content">
                 <div>
                 </div>
-                <div class="widget-chat-name">{{ message.sender.display_name or message.sender.username }}</div>
+                <div class="widget-chat-item">{{ message.sender.display_name or message.sender.username }}</div>
                 <div class="widget-chat-message last">
                   {{ message.content }}
                 </div>
@@ -62,7 +43,21 @@
   <div class="card-arrow-bottom-left"></div>
   <div class="card-arrow-bottom-right"></div>
 </div>
-<script src="../static/js/socket.js"></script>
-<script type="module" src="../static/js/page-messenger.demo.js"></script>
 
-{% endblock %}
+<!-- init sockets  -->
+<script src="../static/js/socket.js"></script>
+<script src="../static/js/userlist.js"></script>  
+<script src="../static/js/privateMsgMenu.js"></script>
+<script src="../static/js/users_update.js"></script>
+
+
+<!-- init js  -->
+<script src="../static/assets/js/JQUERYUI.js"></script>
+<script type="module" src="../static/assets/js/demo/page-messenger.demo.js"></script>
+<script src="../static/assets/js/vendor.min.js"></script>
+<script src="../static/assets/js/app.min.js"></script>
+</div>
+
+</body>
+
+</html>

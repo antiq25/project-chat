@@ -1,27 +1,23 @@
-
-
-
-#chatbox::-webkit-scrollbar {
+#chatbox-webkit-scrollbar {
   display: none;
-  /* Hide scrollbar for Chrome, Safari and Opera */
 }
 
-#chatbox, .widget-chat {
+
+.messenger-content-body, #chatbox {
   width: 100%;
-  overflow-y: scroll;
-  height: 400px;
+  height: 600px;
   color: white;
+  margin: 1px;
+  padding: 0;
+  bottom: 0;
+
 }
 
-/*  */
-
-
-
-#chatbox, .widget-chat{
-  margin: 0;
-  padding: 0; 
-}
-
+#chatbox {
+  overflow-x: hidden;
+  padding: 10px;
+  height: 100%;
+} 
 
 #chatbox p {
   margin: 0;
@@ -42,31 +38,17 @@
   margin-top: 10px;
 }
 
-/* End sizing  */
-
 .container-fluid {
   animation: fadeIn 1s;
   animation-fill-mode: forwards;
 }
 
-.receiverMessage {
-  animation: fadeIn 1s;
-  animation-fill-mode: forwards;
-}
-
-.senderMessage {
-  animation: fadeIn 1s;
-  animation-fill-mode: forwards;
-}
-
+.receiverMessage,
+.senderMessage,
 .card {
   animation: fadeIn 1s;
   animation-fill-mode: forwards;
 }
-
-/* Remind me to explain to you about how this works ^^^  */
-
-/* Styling starts here  */
 
 .gradient5 {
   background: #00c6ff;
@@ -75,12 +57,7 @@
 }
 
 .graddy6 {
-  background: linear-gradient(
-    45deg,
-    #485563,
-    #29323c,
-    rgb(255, 255, 255)
-  ) !important;
+  background: linear-gradient(45deg, #485563, #29323c, rgb(255, 255, 255)) !important;
   background-size: 400% 400%;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }
@@ -89,8 +66,70 @@
   display: none;
 }
 
-
 .modal-backdrop.show {
   z-index: auto;
   opacity: 0.25;
+}
+
+.app.app-content-full-width.app-sidebar-collapsed.h-100 {
+  background-color: rgba(17, 25, 40, 0.5);
+}
+
+
+body, html  {
+  width: 100%; 
+  height: 100%;
+  background-image: url('../assets/img/61615fb6-8387-4458-bda9-7966d1663647\ \(1\).png');
+  background-repeat: no-repeat;
+    backdrop-filter: blur(15px) saturate(200%);
+    -webkit-backdrop-filter: blur(21px) saturate(200%);
+  background-size: cover;
+}
+
+
+#chat-sidebar {
+  z-index: 999;
+  
+}
+
+
+
+.profile-link {
+    color: white;
+}
+
+.profile-link:hover {
+    color: black;
+    text-shadow: 2px, 1px, 1px, rgb(247, 242, 242);
+}
+
+
+
+
+
+.menu, #header, .input-group {
+  background: rgb(46,52,66);
+background: -moz-linear-gradient(top,  rgba(46,52,66,1) 0%, rgba(30,37,52,1) 100%);
+background: -webkit-linear-gradient(top,  rgba(46,52,66,1) 0%,rgba(30,37,52,1) 100%);
+background: linear-gradient(to bottom,  rgba(46,52,66,1) 0%,rgba(30,37,52,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2e3442', endColorstr='#1e2534',GradientType=0 );
+
+}
+
+.app-init {
+      background-color: rgba(17, 25, 40, 0.25);
+}
+
+/* make this fill up viewport  */
+
+
+
+/* make this fill up viewport  */
+
+.messenger-content-footer {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  margin-top: auto;
+  background-color: rgba(17, 25, 40, 0.5);  
 }

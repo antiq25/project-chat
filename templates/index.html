@@ -4,38 +4,30 @@
 
 
 
-  <link rel="stylesheet" href="../static/assets/webfonts/fa-brands-400.ttf">
 
   
-  <div id="app" class="app app-content-full-width app-sidebar-collapsed">
+  <div id="app" class="app app-content-full-height app-sidebar-collapsed">
     <div id="header" class="app-header">
 <div class="desktop-toggler">
-  <button type  ="button" class="menu-toggler" data-toggle-class="app-sidebar-collapsed" data-dismiss-class="app-sidebar-toggled" data-toggle-target=".app">
-<span class="bar"></span>
-<span class="bar"></span>
-<span class="bar"></span>
-</button>
+  <button type="button" class="menu-toggler" data-toggle-class="app-sidebar-collapsed" data-dismiss-class="app-sidebar-toggled" data-toggle-target=".app"><i class="fa fa-user-minus"></i></button> 
 </div>
 <div class="mobile-toggler">
-  <button type="button" class="menu-toggler" data-toggle-class="app-sidebar-mobile-toggled" data-toggle-target=".app">
-    <span class="bar"></span>
-    <span class="bar"></span>
-    <span class="bar"></span>
-  </button>
+  <button type="button" class="menu-toggler" data-toggle-class="app-sidebar-mobile-toggled" data-toggle-target=".app"><i class="fa fa-user-minus"></i></button>
+
 </div>
 <div class="brand">
-  <a href="index-2.html" class="brand-logo">
-    <span class="brand-img">
-<span class="brand-img-text text-theme">EQ</span>
+  <a href="/" class="brand-logo">
+    <img src="../static/assets//img/st,small,845x845-pad,1000x1000,f8f8f8.u2.jpg" style="display: block; width:50px;">
+<span class="brand-img-text text-theme">smart</span>
 </span>
-<span class="brand-text">eq network</span>
+<span class="brand-text">botz.ai</span>
 </a>
 </div>
 <style>
   .chat-sidebar {
     position: fixed;
     top: 0;
-    right: -400px; /* Initially hidden */
+    right: -200px; /* Initially hidden */
     width: 400px;
     height: 100%;
     overflow-y: auto;
@@ -46,13 +38,10 @@
     right: 0; /* Show when active */
 }
 </style>
+
 {% include 'menu.html' %}
 {% include 'chat.html' %}
 
-
-  
-<script src="../static/assets/js/vendor.min.js"></script>        
-<script src="../static/assets/js/app.min3661.js"></script>
 
               </div>
             </div>
@@ -64,3 +53,4 @@
   
 
   {% endblock %}
+
