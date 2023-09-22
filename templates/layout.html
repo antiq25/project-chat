@@ -13,18 +13,22 @@
   <!-- App favicon -->
   <link rel="shortcut icon" type="text/css" href="../static/uploads/default_image.png">
   <!-- CSS -->
-  <link rel="stylesheet" href="../static/css/style.css">
-  <link rel="stylesheet" href="../static/css/picmos.css">
   <link rel="stylesheet" href="../static/dist2/css/bootstrap.min.css">
   <link rel="stylesheet" href="../static/assets/css/vendor.min.css">
   <link rel="stylesheet" href="../static/assets/css/app.min.css"> 
+
+  
+  <link rel="stylesheet" href="../static/css/style.css">
   
 </head>
+    <body class="gradPrim" onload="document.getElementById('message').focus(); scrollBottom();">
 
-<body>
+  <div class="overlay-smrt"></div>
+<div class="smrtImg">
+</div>
   
   {% block content %}
-  
+
   {% endblock %}
   
   
@@ -37,6 +41,9 @@
   <script src="../static/dist2/js/bootstrap.bundle.min.js"></script>
   <script src="../static/assets/js/vendor.min.js"></script>
   <script src="../static/assets/js/app.min.js"></script>
+
+    <script type="module" src="../static/js/page-messenger.demo.js"></script> 
+
 </body>
 
 </html>

@@ -1,3 +1,4 @@
+
   <div class="messenger-content-body gradPrim">
     <div class="widget-chat" id="chatbox">
       <div class="widget-chat-date">TODAY</div>
@@ -6,7 +7,7 @@
         <div class="widget-chat-media">
           <img
             src="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.png')) }}"
-            alt="{{ (message.sender.display_name if message.sender.display_name else 'Default User') }}" width="30"
+            alt="{{ (message.sender.display_name if message.sender.display_name else 'Default User') }}" width="40"
             class="card-img">
         </div>
         <div class="widget-chat-content">
@@ -56,6 +57,5 @@
 <script src="../static/js/userlist.js"></script>  
 <script src="../static/js/privateMsgMenu.js"></script>
 <script src="../static/js/users_update.js"></script>
-  <script type="module" src="../static/js/page-messenger.demo.js"></script> 
 </div>
 </div>

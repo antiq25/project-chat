@@ -1,10 +1,3 @@
-/*
-Template Name: HUD - Responsive Bootstrap 5 Admin Template
-Version: 2.2.0
-Author: Sean Ngu
-Website: http://www.seantheme.com/hud/
-*/
-
 import { createPopup } from 'https://unpkg.com/@picmo/popup-picker@latest/dist/index.js?module';
 
 var handleRenderPickmo = function() {
@@ -24,10 +17,12 @@ var handleRenderPickmo = function() {
   });
 
   picker.addEventListener('emoji:select', (selection) => {
-    $('#input').val($('#input').val() + selection.emoji)
+    $('#message').val($('#message').val() + selection.emoji)
 
-    selectionContainer.classList.remove('empty');
-  });
+    if (selectionContainer) {
+      selectionContainer.classList.remove('d-none');
+  }
+    });
 };
 
 var handleChatScrollBottom = function() {
@@ -47,7 +42,7 @@ var handleMobileMessengerToggler = function() {
 };
 
 
-$(document).ready(function() {
+$(() => {
   handleRenderPickmo();
   handleChatScrollBottom();
   handleMobileMessengerToggler();

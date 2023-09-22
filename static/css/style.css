@@ -43,32 +43,23 @@
   --gradient-complementary: linear-gradient(135deg, #2c3240, #a08f60);
 }
 
-html,
-body {
-  width: 100%;
-  height: 100%;
-  margin: 0; 
 
-}
 
-#chatbox::-webkit-scrollbar {
-  display: none;
-}
+/* body  */
 
 #chatbox {
+  margin: 0 auto;
   width: 100%;
   overflow-y: scroll;
-  height: 900px;
-    margin: 0;
+  height: 600px;
   color: rgb(255, 255, 255);
 }
 
 .messenger-content-footer {
   width: 100%;
-  margin: auto;
-   bottom: 0;
+  position: fixed;
+  bottom: 0;
 }
-
 
 /* chat  */
 
@@ -77,37 +68,41 @@ body {
 /* overlay */
 
 .smrtImg {
-  position: relative;
-  width: 100%; /* or any specific width */
-  height: 900px; /* or any specific height */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-repeat: no-repeat;
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 999;
   background-size: cover;
   backdrop-filter: blur(15px) saturate(200%);
-  background-repeat: no-repeat;
   background-image: url("../uploads/bg2.jpg");
-  opacity: 0.1;
-  z-index: 999 !important;
-  pointer-events: none;
 }
 
-.overlay-smrt {
+.overlay-smrtbefore {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  position: none;
-  
+  background-image: var(--gradient-neutral-near-black);
 }
+
 
 
 
 /* side bar */
 #chatContent {
   width: 100%;
-  background-image: var(--gradient-neutral-near-black);
+  margin: 0 auto;
   background-size: cover;
+  background-color: var(--gradient-primary);
+
   overflow-y: scroll;
-  height: 900px;
+  height: 600px;
 }
 
 #chatContent::-webkit-scrollbar {
@@ -120,7 +115,7 @@ body {
   animation: fadeAi 0.5s;
 }
 
-@keyframes fadeAi {
+@keyframes adeAi {
   from {
     opacity: 0;
   }
@@ -130,6 +125,6 @@ body {
 }
 
 
-.gradPrim {
-  background-image: var(--gradient-neutral-near-black);
-} 
+.gradPrim  {
+  background-image: var(--gradient-primary);
+}

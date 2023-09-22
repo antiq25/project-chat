@@ -1,22 +1,18 @@
-/*
-Template Name: HUD - Responsive Bootstrap 5 Admin Template
-Version: 2.2.0
-Author: Sean Ngu
-Website: http://www.seantheme.com/hud/
-*/
-
 import { createPopup } from 'https://unpkg.com/@picmo/popup-picker@latest/dist/index.js?module';
 
 var handleRenderPickmo = function() {
 	const selectionContainer = document.querySelector('#selection-outer');
-  const emoji = document.querySelector('#selection-emoji');
-  const name = document.querySelector('#selection-name');
+  const emoji = document.querySelector('selection-emoji');
+  const name = document.querySelector('selection-name');
   const trigger = document.querySelector('#trigger');
 
   const picker = createPopup({}, {
     referenceElement: trigger,
     triggerElement: trigger,
-    position: 'right-end'
+    position: 'right-end',
+    emoji: emoji, // emoji element  (optional)
+    name: name // name element (optional)  
+
   });
 
   trigger.addEventListener('click', () => {
@@ -32,18 +28,14 @@ var handleRenderPickmo = function() {
     });
 };
 
-
-
-var handleMobileMessengerToggler = function() {
-	$(document).on('click', '[data-toggle="messenger-content"]', function(e) {
-		e.preventDefault();
-		
-		$('.messenger').toggleClass('messenger-content-toggled');
-	});
+var handleChatScrollBottom = function() {
+  var elm = document.getElementById('chatbox');
+	elm.scrollTop = elm.scrollHeight - elm.clientHeight;
 };
+
 
 
 $(() => {
   handleRenderPickmo();
-  handleMobileMessengerToggler();
+  handleChatScrollBottom();
 });
