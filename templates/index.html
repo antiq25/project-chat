@@ -7,6 +7,9 @@
 
   
   <div id="app" class="app app-content-full-height app-sidebar-collapsed">
+    <div class="overlay-smrt">
+<div class="smrtImg"></div>
+</div>
     <div id="header" class="app-header">
 <div class="desktop-toggler">
   <button type="button" class="menu-toggler" data-toggle-class="app-sidebar-collapsed" data-dismiss-class="app-sidebar-toggled" data-toggle-target=".app"><i class="fa fa-user-minus"></i></button> 
@@ -15,29 +18,15 @@
   <button type="button" class="menu-toggler" data-toggle-class="app-sidebar-mobile-toggled" data-toggle-target=".app"><i class="fa fa-user-minus"></i></button>
 
 </div>
-<div class="brand">
+<div class="brand text-white">
   <a href="/" class="brand-logo">
-    <img src="../static/assets//img/st,small,845x845-pad,1000x1000,f8f8f8.u2.jpg" style="display: block; width:50px;">
-<span class="brand-img-text text-theme">smart</span>
+    <img src="../static/uploads/smrt.png" style="display: block; width:40px;">
+<span class="brand-img-text">smart</span>
 </span>
 <span class="brand-text">botz.ai</span>
 </a>
 </div>
-<style>
-  .chat-sidebar {
-    position: fixed;
-    top: 0;
-    right: -200px; /* Initially hidden */
-    width: 400px;
-    height: 100%;
-    overflow-y: auto;
-    transition: right 0.3s ease;
-}
 
-.chat-sidebar.active {
-    right: 0; /* Show when active */
-}
-</style>
 
 {% include 'menu.html' %}
 {% include 'chat.html' %}

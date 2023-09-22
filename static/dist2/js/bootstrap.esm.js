@@ -1,5 +1,5 @@
 /*!
-  * Bootstrap v5.3.1 (https://getbootstrap.com/)
+  * Bootstrap v5.3.2 (https://getbootstrap.com/)
   * Copyright 2011-2023 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
@@ -644,7 +644,7 @@ class Config {
  * Constants
  */
 
-const VERSION = '5.3.1';
+const VERSION = '5.3.2';
 
 /**
  * Class definition
@@ -725,9 +725,9 @@ const getSelector = element => {
     if (hrefAttribute.includes('#') && !hrefAttribute.startsWith('#')) {
       hrefAttribute = `#${hrefAttribute.split('#')[1]}`;
     }
-    selector = hrefAttribute && hrefAttribute !== '#' ? hrefAttribute.trim() : null;
+    selector = hrefAttribute && hrefAttribute !== '#' ? parseSelector(hrefAttribute.trim()) : null;
   }
-  return parseSelector(selector);
+  return selector;
 };
 const SelectorEngine = {
   find(selector, element = document.documentElement) {

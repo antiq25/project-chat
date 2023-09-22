@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, emit, join_room, leave_room, rooms, close_room
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from PIL import Image
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_cors import CORS
 from flask_wtf import CSRFProtect
@@ -132,10 +133,8 @@ def get_modal_content():
                            receiver=receiver)
 
 
-
-
 @app.route("/profile", methods=["GET", "POST"])
-def profile(): 
+def profile():
     user = User.query.filter_by(id=session["user_id"]).first()
     if request.method == "POST":
         display_name = request.form.get("display_name")
@@ -144,7 +143,16 @@ def profile():
         if profile_pic and allowed_file(profile_pic.filename):
             filename = secure_filename(profile_pic.filename)
             filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-            profile_pic.save(filepath)
+            
+            # Open the image file
+            img = Image.open(profile_pic)
+            
+            # Resize the image to 55x55 pixels
+            img = img.resize((55, 55))
+            
+            # Save the resized image
+            img.save(filepath)
+            
             relative_path = os.path.join("uploads", filename)
             user.profile_pic = relative_path
         if display_name:

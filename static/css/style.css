@@ -1,135 +1,135 @@
-#chatbox-webkit-scrollbar {
-  display: none;
+@import url("../dist2/css/bootstrap.min.css");
+
+/* root colour schemes */
+
+:root {
+  /* Primary Color */
+  --primary: #2c3240;
+
+  /* Secondary Colors */
+  --secondary-lighter: #3e4560;
+  --secondary-darker: #1a1e2a;
+
+  /* Accent Colors */
+  --accent-soft: #6a70a0;
+  --accent-bright: #7885d6;
+
+  /* Neutrals */
+  --neutral-near-black: #0e1018;
+  --neutral-gray: #606478;
+  --neutral-light-gray: #b0b2c8;
+
+  /* Complementary Color */
+  --complementary: #a08f60;
+}
+:root {
+  /* Primary Gradient */
+  --gradient-primary: linear-gradient(135deg, #2c3240, #3e4560);
+
+  /* Secondary Gradients */
+  --gradient-secondary-lighter: linear-gradient(135deg, #2c3240, #3e4560);
+  --gradient-secondary-darker: linear-gradient(135deg, #2c3240, #1a1e2a);
+
+  /* Accent Gradients */
+  --gradient-accent-soft: linear-gradient(135deg, #2c3240, #6a70a0);
+  --gradient-accent-bright: linear-gradient(135deg, #2c3240, #7885d6);
+
+  /* Neutral Gradients */
+  --gradient-neutral-near-black: linear-gradient(135deg, #2c3240, #0e1018);
+  --gradient-neutral-gray: linear-gradient(135deg, #2c3240, #606478);
+  --gradient-neutral-light-gray: linear-gradient(135deg, #2c3240, #b0b2c8);
+
+  /* Complementary Gradient */
+  --gradient-complementary: linear-gradient(135deg, #2c3240, #a08f60);
 }
 
-
-.messenger-content-body, #chatbox {
+html,
+body {
   width: 100%;
-  height: 600px;
-  color: white;
-  margin: 1px;
-  padding: 0;
-  bottom: 0;
+  height: 100%;
+  margin: 0; 
 
+}
+
+#chatbox::-webkit-scrollbar {
+  display: none;
 }
 
 #chatbox {
-  overflow-x: hidden;
-  padding: 10px;
-  height: 100%;
-} 
-
-#chatbox p {
-  margin: 0;
-  padding: 0;
+  width: 100%;
+  overflow-y: scroll;
+  height: 900px;
+    margin: 0;
+  color: rgb(255, 255, 255);
 }
 
-#chatbox p span {
-  color: #000;
-}
-
-#chatbox p span.username {
-  font-weight: bold;
-}
-
-.input-group {
-  margin-top: 10px;
-  padding: 10px;
-  margin-top: 10px;
-}
-
-.container-fluid {
-  animation: fadeIn 1s;
-  animation-fill-mode: forwards;
-}
-
-.receiverMessage,
-.senderMessage,
-.card {
-  animation: fadeIn 1s;
-  animation-fill-mode: forwards;
-}
-
-.gradient5 {
-  background: #00c6ff;
-  background: -webkit-linear-gradient(to right, #0072ff, #00c6ff);
-  background: linear-gradient(to right, #0072ff, #00c6ff);
-}
-
-.graddy6 {
-  background: linear-gradient(45deg, #485563, #29323c, rgb(255, 255, 255)) !important;
-  background-size: 400% 400%;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-}
-
-.user-data {
-  display: none;
-}
-
-.modal-backdrop.show {
-  z-index: auto;
-  opacity: 0.25;
-}
-
-.app.app-content-full-width.app-sidebar-collapsed.h-100 {
-  background-color: rgba(17, 25, 40, 0.5);
+.messenger-content-footer {
+  width: 100%;
+  margin: auto;
+   bottom: 0;
 }
 
 
-body, html  {
-  width: 100%; 
-  height: 100%;
-  background-image: url('../assets/img/61615fb6-8387-4458-bda9-7966d1663647\ \(1\).png');
-  background-repeat: no-repeat;
-    backdrop-filter: blur(15px) saturate(200%);
-    -webkit-backdrop-filter: blur(21px) saturate(200%);
+/* chat  */
+
+
+
+/* overlay */
+
+.smrtImg {
+  position: relative;
+  width: 100%; /* or any specific width */
+  height: 900px; /* or any specific height */
   background-size: cover;
+  backdrop-filter: blur(15px) saturate(200%);
+  background-repeat: no-repeat;
+  background-image: url("../uploads/bg2.jpg");
+  opacity: 0.1;
+  z-index: 999 !important;
+  pointer-events: none;
 }
 
-
-#chat-sidebar {
-  z-index: 999;
+.overlay-smrt {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: none;
   
 }
 
 
 
-.profile-link {
-    color: white;
-}
-
-.profile-link:hover {
-    color: black;
-    text-shadow: 2px, 1px, 1px, rgb(247, 242, 242);
-}
-
-
-
-
-
-.menu, #header, .input-group {
-  background: rgb(46,52,66);
-background: -moz-linear-gradient(top,  rgba(46,52,66,1) 0%, rgba(30,37,52,1) 100%);
-background: -webkit-linear-gradient(top,  rgba(46,52,66,1) 0%,rgba(30,37,52,1) 100%);
-background: linear-gradient(to bottom,  rgba(46,52,66,1) 0%,rgba(30,37,52,1) 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2e3442', endColorstr='#1e2534',GradientType=0 );
-
-}
-
-.app-init {
-      background-color: rgba(17, 25, 40, 0.25);
-}
-
-/* make this fill up viewport  */
-
-
-
-/* make this fill up viewport  */
-
-.messenger-content-footer {
+/* side bar */
+#chatContent {
   width: 100%;
-  position: fixed;
-  bottom: 0;
-  margin-top: auto;
-  background-color: rgba(17, 25, 40, 0.5);  
+  background-image: var(--gradient-neutral-near-black);
+  background-size: cover;
+  overflow-y: scroll;
+  height: 900px;
 }
+
+#chatContent::-webkit-scrollbar {
+  display: none;
+}
+
+#chatContent {
+  border-radius: 10px;
+  margin: 0 auto;
+  animation: fadeAi 0.5s;
+}
+
+@keyframes fadeAi {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+.gradPrim {
+  background-image: var(--gradient-neutral-near-black);
+} 

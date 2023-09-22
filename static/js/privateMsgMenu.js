@@ -42,6 +42,8 @@ function toggleSidebar() {
 
 
 
+// HANDLING PRIVATE MESSAGES
+
 
 function handlePrivateMessageSubmission(event) {
     event.preventDefault();
@@ -66,7 +68,7 @@ if (!privateMessagesList) {
 
 function appendMessageToChatbox(data) {
   const messageDiv = document.createElement('div');
-messageDiv.className = 'd-flex align-items-center mb-2';
+messageDiv.className = 'd-flex align-items-center';
 
 const strongElement = document.createElement('strong');
 strongElement.textContent = data.display_name || data.from;
@@ -123,10 +125,10 @@ function openPrivateChat(userId, username) {
 
         // Populate chat with history
         data.forEach(message => {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('d-flex', 'align-items-center', 'mb-2');
-            messageElement.innerHTML = `<strong>${message.username}</strong>: ${message.content}`;
-            privateMessagesList.appendChild(messageElement);
+            const privateMessageElement = document.createElement('div');
+            privateMessageElement.classList.add('d-flex', 'align-items-center', 'mb-2');
+            privateMessageElement.innerHTML = `<strong>${message.username}</strong>: ${message.content}`;
+            privateMessagesList.appendChild(privateMessageElement);
         });
         scrollBottom();
     });

@@ -1,25 +1,70 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Inbox</title>
-</head>
-<body>
-    <h1>Inbox</h1>
-    
-    <h2>Conversations:</h2>
-    <ul>
-    {% for sender in senders %}
-        <li><a href="{{ url_for('private_chat', receiver_id=user.id) }}">{{ sender.username }}</a></li>
-    {% endfor %}
-    </ul>
 
-    <h2>All Received Messages:</h2>
-    <ul>
-    {% for message in received_messages %}
-        <li><strong>{{ message.sender.username }}:</strong> {{ message.content }} <small>{{ message.timestamp }}</small></li>
-    {% endfor %}
-    </ul>
+{% block content %}
+
+<!-- connect client, emits user id to join  -->
 
 
-</body>
-</html>
+<div id="notificationList">
+    <div id="notificationDot" class="hidden"></div>
+</div>
+<!-- Chat Sidebar -->
+
+
+<!-- Private Chat Modal -->
+<div class="modal" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="chatModalTitle">Chat</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="chatModalBody">
+                <div id="privateChatContent">
+        <h3>Private Messages with {{ receiver.username }}:<span id="receiverUsername"></span></h3>
+                            <div class="shadow-6 p-3" style="height: 400px; overflow-y: scroll;" id="private-messages">
+                                {% for message in private_messages %}
+                                <div class="widget-chat-messanger">
+                                    {% if message.profile_pic %}
+                                    <img src="{{ message.profile_pic }}" alt="Profile Picture" width="30" height="30" class="rounded-circle me-2">
+                                    {% endif %}
+                                    <div>
+                                    <div>
+                                        <strong>{{ message.display_name }}</strong>: {{ message.content }} 
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                             </div>
+                    <form id="private-chat-form">
+                        <input type="text" id="private-message-input" placeholder="Type your message">
+                        <button type="submit">Send</button>
+                    </form>
+                    <a href="/">Back to Global Chat</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Profile Modal -->
+<div class="modal fade" id="userProfileModal" tabindex="-1" aria-labelledby="userProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userProfileModalLabel">User Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="userProfilePic" src="" alt="Profile Picture" class="rounded-circle" width="100">
+                <h4 id="userProfileName"></h4>
+                <!-- Add more user profile details as needed -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

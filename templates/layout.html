@@ -5,25 +5,38 @@
   <meta charset="UTF-8">
   <title>antiq's den</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta content="antiq's chatroom" name="description">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta content="antiq's chatroom" name="description">
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
   <!-- App favicon -->
   <link rel="shortcut icon" type="text/css" href="../static/uploads/default_image.png">
+  <!-- CSS -->
+  <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="stylesheet" href="../static/css/picmos.css">
+  <link rel="stylesheet" href="../static/dist2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/assets/css/vendor.min.css">
+  <link rel="stylesheet" href="../static/assets/css/app.min.css"> 
+  
 </head>
-<link rel="stylesheet" href="../static/assets/css/vendor.min.css">
-<link rel="stylesheet" href="../static/assets/css/app.min.css">
-<link rel="stylesheet" href="../static/css/style.css">
-    {% block content %}
-    
-    {% endblock content %}
-    <!-- initialize the sockets + chat functions  -->
 
-
-</div>
-    
+<body>
+  
+  {% block content %}
+  
+  {% endblock %}
+  
+  
+  <!-- initialize the sockets + chat functions  -->
+  
+  
+  <!-- init js  -->
+  
+  
+  <script src="../static/dist2/js/bootstrap.bundle.min.js"></script>
+  <script src="../static/assets/js/vendor.min.js"></script>
+  <script src="../static/assets/js/app.min.js"></script>
 </body>
 
 </html>

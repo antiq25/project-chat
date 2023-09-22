@@ -1,41 +1,46 @@
-
-
-        <!-- ... your header content ... -->
-      </div>
-
-      <div class="messenger-content-body">
-        <div data-scrollbar="true" data-height="100%">
-          <div class="widget-chat" id="chatbox">
-            <div class="widget-chat-date">TODAY</div>
-            {% for message in messages %}
-            <div class="widget-chat-item">
-              <div class="widget-chat-media">
-                <img src="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.webp')) }}" alt="{{ (message.sender.display_name if message.sender.display_name else 'Default User') }}" width="30" class="card-img">
-              </div>
-              <div class="widget-chat-content">
-                <div>
-                </div>
-                <div class="widget-chat-item">{{ message.sender.display_name or message.sender.username }}</div>
-                <div class="widget-chat-message last">
-                  {{ message.content }}
-                </div>
-              </div>
-            </div>
-            {% endfor %}
+  <div class="messenger-content-body gradPrim">
+    <div class="widget-chat" id="chatbox">
+      <div class="widget-chat-date">TODAY</div>
+      {% for message in messages %}
+      <div class="widget-chat-item">
+        <div class="widget-chat-media">
+          <img
+            src="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.png')) }}"
+            alt="{{ (message.sender.display_name if message.sender.display_name else 'Default User') }}" width="30"
+            class="card-img">
+        </div>
+        <div class="widget-chat-content">
+          <div>
+          </div>
+          <div class="widget-chat-item">{{ message.sender.display_name or message.sender.username }}</div>
+          <div class="widget-chat-message last">
+            {{ message.content }}
           </div>
         </div>
       </div>
-
-      <div class="messenger-content-footer">
-        <div class="input-group input-group-lg position-relative z-3">
-          <button class="btn text-inverse position-absolute start-0" id="trigger"><i class="fa fa-smile" aria-hidden="true"></i></button>
-          <input type="text" class="form-control rounded-start ps-45px" id="message" placeholder="Write a message..." onkeydown="checkKey(event)">
-          <button class="btn btn-outline-default" onclick="sendMessage()" id="message-button"><i class="fa fa-paper-plane text-muted"></i></button>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </div>
+
+<div class="messenger-content-footer gradPrim">
+  <div class="input-group input-group-lg position-relative z-3">
+     <div id="selection-outer" class="d-none">
+        <span id="selection-emoji"></span>
+        <span id="selection-name"></span>
+    </div>
+    <button class="btn text-inverse position-absolute start-0" id="trigger"><i class="fa fa-smile"
+        aria-hidden="true"></i></button>
+    <input type="text" class="form-control rounded-start gradPrim ps-45px" id="message" placeholder="Write a message..."
+      onkeydown="checkKey(event)">
+    <button class="btn btn-outline-default" onclick="sendMessage()" id="message-button"><i
+        class="fa fa-paper-plane text-muted"></i></button>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
 
 <div class="card-arrow">
   <div class="card-arrow-top-left"></div>
@@ -43,21 +48,14 @@
   <div class="card-arrow-bottom-left"></div>
   <div class="card-arrow-bottom-right"></div>
 </div>
+</div>
+</div>  
 
-<!-- init sockets  -->
+
 <script src="../static/js/socket.js"></script>
 <script src="../static/js/userlist.js"></script>  
 <script src="../static/js/privateMsgMenu.js"></script>
 <script src="../static/js/users_update.js"></script>
-
-
-<!-- init js  -->
-<script src="../static/assets/js/JQUERYUI.js"></script>
-<script type="module" src="../static/assets/js/demo/page-messenger.demo.js"></script>
-<script src="../static/assets/js/vendor.min.js"></script>
-<script src="../static/assets/js/app.min.js"></script>
+  <script type="module" src="../static/js/page-messenger.demo.js"></script> 
 </div>
-
-</body>
-
-</html>
+</div>
