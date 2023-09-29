@@ -29,10 +29,9 @@ var handleRenderPickmo = function() {
 };
 
 var handleChatScrollBottom = function() {
-  var elm = document.getElementById('chatbox');
+  var elm = document.getElementById('message');
 	elm.scrollTop = elm.scrollHeight - elm.clientHeight;
-};
-
+}
 
 
 $(() => {

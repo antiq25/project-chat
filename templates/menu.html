@@ -1,5 +1,22 @@
 <script src="../static/js/socket.io.min.js"></script>
-
+<style>
+    @keyframes notificationAnimation {
+        0% {
+            color: initial;
+        }
+        50% {
+            color: white;
+        }
+        100% {
+            color: initial;
+        }
+    }
+    
+    #notificationDot.new-notification {
+        animation: notificationAnimation 1s infinite;
+    }
+    
+</style>
 <!-- connect client, emits user id to join  -->
 <script>
     const socket = io.connect(location.origin);
@@ -14,22 +31,20 @@
 
 
     <!-- notification center start -->
-    <div class="menu">
-
     <div class="menu-item dropdown">
-      <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
-        <span id="notificationDot" onclick="hideDot()" style="display:none;">•</span>
+    <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
         <span id="notificationCount"></span>
-        <div class="menu-icon"><i class="bi bi-bell nav-icon"></i></div>
-        <div class="dropdown-menu gradPrim dropdown-menu-end  fs-11px pt-1">
-            <div id="notificationList"></div>
-            <div class="fs-20px">
-              <i class="bi bi-bag text-theme"></i>
-            </a>
+        <div class="menu-icon" id="notificationDot" onclick="showModal()" style="display:none;">
+            <i class="bi bi-bell nav-icon"></i>
           </div>
+        <div class="dropdown-menu gradPrim dropdown-menu-end  fs-11px pt-1">
+            <div class="fs-20px">
+            </div>
         </div>
-    </div>
+    </a>
 </div>
+
+
 
 
 <!-- notification center end -->
@@ -145,3 +160,30 @@
          
 </div>  
 
+<!-- Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="notificationList">
+          <!-- Notifications will be appended here -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Menu Icon -->
+
+  <script>
+    function showModal() {
+    var notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+    notificationModal.show();
+}
+
+    </script>

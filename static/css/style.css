@@ -1,7 +1,7 @@
+/* Import Bootstrap CSS */
 @import url("../dist2/css/bootstrap.min.css");
 
-/* root colour schemes */
-
+/* Define root variables */
 :root {
   /* Primary Color */
   --primary: #2c3240;
@@ -21,8 +21,7 @@
 
   /* Complementary Color */
   --complementary: #a08f60;
-}
-:root {
+
   /* Primary Gradient */
   --gradient-primary: linear-gradient(135deg, #2c3240, #3e4560);
 
@@ -43,30 +42,17 @@
   --gradient-complementary: linear-gradient(135deg, #2c3240, #a08f60);
 }
 
+/* Define styles for #chatbox */
 
 
-/* body  */
-
-#chatbox {
-  margin: 0 auto;
-  width: 100%;
-  overflow-y: scroll;
-  height: 600px;
-  color: rgb(255, 255, 255);
-}
-
+/* Define styles for .messenger-content-footer */
 .messenger-content-footer {
   width: 100%;
   position: fixed;
   bottom: 0;
 }
 
-/* chat  */
-
-
-
-/* overlay */
-
+/* Define styles for .smrtImg */
 .smrtImg {
   position: fixed;
   top: 0;
@@ -82,6 +68,7 @@
   background-image: url("../uploads/bg2.jpg");
 }
 
+/* Define styles for .overlay-smrtbefore */
 .overlay-smrtbefore {
   position: fixed;
   top: 0;
@@ -91,31 +78,31 @@
   background-image: var(--gradient-neutral-near-black);
 }
 
-
-
-
-/* side bar */
-#chatContent {
+/* Define styles for #chatContent */
+#chatContent, #chatbox {
   width: 100%;
   margin: 0 auto;
   background-size: cover;
   background-color: var(--gradient-primary);
-
   overflow-y: scroll;
   height: 600px;
+  border-radius: 10px;
+  animation-name: fadeAi;
+  animation-duration: 0.5s;
 }
 
+/* Hide scrollbar for #chatContent */
 #chatContent::-webkit-scrollbar {
   display: none;
 }
 
-#chatContent {
-  border-radius: 10px;
-  margin: 0 auto;
-  animation: fadeAi 0.5s;
+#chatbox::-webkit-scrollbar {
+  display: none;
 }
 
-@keyframes adeAi {
+
+/* Define keyframe animation */
+@keyframes fadeAi {
   from {
     opacity: 0;
   }
@@ -124,7 +111,7 @@
   }
 }
 
-
-.gradPrim  {
+/* Define styles for .gradPrim */
+.gradPrim {
   background-image: var(--gradient-primary);
 }

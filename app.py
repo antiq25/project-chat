@@ -23,7 +23,7 @@ socketio = SocketIO(app, async_mode="gevent", cors_allowed_origins="*")
 #socketio = SocketIO(app, manage_session=False)
 
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+ALLOWED_EXTENSIONS = "png", "jpg", "jpeg", "gif"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 online_users = {}
@@ -203,9 +203,9 @@ def register():
 def logout():
     session.pop("user_id", None)
     session.pop("username", None)
-    return redirect(url_for("login")
+    return redirect(url_for("login"))
                     
-                    )
+
 @app.route("/")
 def index():
     # Check if the user is logged in
@@ -269,35 +269,35 @@ def handle_private_message(data):
     db.session.commit()
 
     # Emit a simple notification to update the count on the client side
-    emit("update_notification_count", {}, room=str(receiver_id))
+    emit("update_notification_count", data, room=str(receiver_id))
 
     # Send detailed real-time notification to receiver
     emit("display_notification", {"message": notification_message}, room=str(receiver_id))
-    print(f"Notification emitted to {receiver_id} with message: {notification_message}")
+    print(f"Notification emitted to receiver_id with message: {notification_message}")
 
     # Emit to receiver
-    emit("private_message", {
-        "from": sender.id,
+    emit("private_message", 
+        {"from": sender.id,
         "display_name": sender.display_name or sender.username,
         "profile_pic": url_for("static", filename=sender.profile_pic) if sender.profile_pic else url_for("static", filename="uploads/default_image.webp"),
-        "message": content
-    }, room=str(receiver_id))
+        "message": content}
+    , room=str(receiver_id))
 
     # Emit to sender (the current user)
-    emit("private_message", {
-        "from": sender.id,
+    emit("private_message", 
+        {"from": sender.id,
         "display_name": sender.display_name or sender.username,
         "profile_pic": url_for("static", filename=sender.profile_pic) if sender.profile_pic else url_for("static", filename="uploads/default_image.webp"),
-        "message": content
-    }, room=request.sid)
+        "message": content}
+    , room=request.sid)
 
     # Emit to receiver to update their conversations list
-    emit("update_conversations", {}, room=str(receiver_id))
+    emit("update_conversations", data, room=str(receiver_id))
 
-# Emit to sender (the current user) to update their conversations list
-    emit("update_conversations", {}, room=request.sid)
+    # Emit to sender (the current user) to update their conversations list
+    emit("update_conversations", data, room=request.sid)
 
-    emit("update_inbox", {}, room=str(receiver_id))
+    emit("update_inbox", data, room=str(receiver_id))
 
 
 
@@ -348,14 +348,12 @@ def fetch_notifications():
     if not notifications:
         return jsonify({"message": "No unread notifications", "notifications": []})
 
-
-
     # Transform the ORM objects to a list of dictionaries
-    notification_dicts = [{
-        "id": n.id,
+    notification_dicts = [
+        {"id": n.id,
         "content": n.content,
-        "timestamp": n.timestamp.isoformat()
-    } for n in notifications]
+        "timestamp": n.timestamp.isoformat()}
+     for n in notifications]
 
     return jsonify({"message": "Unread notifications fetched successfully", "notifications": notification_dicts})
 
@@ -412,6 +410,7 @@ def user_connected():
             "id": user.id,
             "profile_pic": url_for("static", filename=user.profile_pic) if user.profile_pic else url_for("static", filename="uploads/default_image.webp")
         }
+        
         emit("user_joined", {"display_name": user.display_name or user.username}, broadcast=True)
         emit(
             "update_user_list",
@@ -470,12 +469,12 @@ def get_conversations():
     for sender_id in senders:
         sender = User.query.get(sender_id)
         latest_message = Message.query.filter_by(sender_id=sender_id, receiver_id=user.id).order_by(Message.timestamp.desc()).first()
-        conversations.append({
-            "id": sender.id,
+        conversations.append(
+            {"id": sender.id,
             "username": sender.username,
             "latest_message": latest_message.content,
-            "timestamp": latest_message.timestamp.isoformat()
-        })
+            "timestamp": latest_message.timestamp.isoformat()}
+        )
 
     return jsonify(conversations)
 
@@ -490,12 +489,13 @@ def chat_history(partner_id):
         (Message.sender_id == partner_id) & (Message.receiver_id == user.id)
     ).all()
 
-    chat_history = [{
-        "id": m.id,
+    chat_history = [
+        {"id": m.id,
         "username": User.query.get(m.sender_id).username,
+        "sender_username": User.query.get(m.sender_id).username,
         "content": m.content,
-        "timestamp": m.timestamp.isoformat()
-    } for m in messages]
+        "timestamp": m.timestamp.isoformat()}
+     for m in messages]
 
     return jsonify(chat_history)
 

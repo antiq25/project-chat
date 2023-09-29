@@ -24,14 +24,16 @@ function fetchAndDisplayUnreadNotifications() {
     .catch(error => console.error('Error fetching unread notifications:', error));
 }
 
-
 function showDot() {
-    const dot = document.getElementById('notificationDot');
-    if (localStorage.getItem('hasNewNotification') === 'true') {
-        dot.style.display = 'inline-block';
-    } else {
-        dot.style.display = 'none';
-    }
+  const dot = document.getElementById('notificationDot');
+  const menuIcon = document.querySelector('.bi-bell');
+  if (localStorage.getItem('hasNewNotification') === 'true') {
+    dot.style.display = 'inline-block';
+    menuIcon.classList.add('new-notification');
+  } else {
+    dot.style.display = 'none';
+    menuIcon.classList.remove('new-notification');
+  }
 }
 
 function hideDot() {
@@ -42,10 +44,8 @@ function hideDot() {
 
 
 function displayNotificationInUI(notification) {
-    console.log("Displaying notification with data:", notification);
     const existingNotification = document.querySelector(`[data-id="${notification.id}"]`);
     if (existingNotification) {
-        console.log(`Notification with ID ${notification.id} already displayed.`);
         return;
     }
 
@@ -112,23 +112,18 @@ function markNotificationAsRead(element) {
             'X-CSRFToken': csrfToken
         }
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === "success") {
-            console.log("Successfully marked notification as read.");
-            element.parentElement.remove();
-        } else {
-            console.error("Error marking notification as read:", data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Fetch error:', error);
-    });
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === "success") {
+      element.parentElement.remove();
+      hideDot();
+    }
+  })
+  .catch(error => {});
 }
 
 
 socket.on('notification', function(data) {
-    console.log("Notification data received:", data);
     displayNotificationInUI(data);
 });
 // END NOTIFICATIONS ///////////////

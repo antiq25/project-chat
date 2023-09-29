@@ -40,3 +40,30 @@ userItem.querySelector('.chatBtn').addEventListener('click', function(event) {
         userListContainer.appendChild(userItem);
     });
 });
+
+document.querySelectorAll('.profileBtn').forEach(function(profileBtn) {
+    profileBtn.addEventListener('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+  
+      // Get user information from clicked button
+      const displayName = event.currentTarget.getAttribute('data-display-name');
+      const userPic = event.currentTarget.getAttribute('data-user-pic');
+      const userName = event.currentTarget.getAttribute('data-user-name');
+  
+      // Set modal content
+      document.getElementById('userProfileName').textContent = displayName;
+      document.querySelector('#userProfileModal input[name="display_name"]').value = displayName;
+      document.querySelector('#userProfileModal input[name="username"]').value = userName;
+  
+      // Set profile picture
+      const profilePicElement = document.getElementById('userProfilePic');
+      profilePicElement.src = userPic;
+  
+      // Show the modal
+      const userProfileModal = new bootstrap.Modal(document.getElementById('userProfileModal'));
+      userProfileModal.show();
+    });
+  });
+  
+

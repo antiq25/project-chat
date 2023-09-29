@@ -84,7 +84,6 @@ privateMessagesList.appendChild(messageDiv);
 
 
 socket.on('private_message', function (data) {
-    console.log("Processing received private message:", data);
     if (!privateMessagesList) {
         console.error('privateMessagesList element not found!');
         return;

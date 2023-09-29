@@ -1,28 +1,29 @@
-
-  <div class="messenger-content-body gradPrim">
-    <div class="widget-chat" id="chatbox">
-      <div class="widget-chat-date">TODAY</div>
-      {% for message in messages %}
-      <div class="widget-chat-item">
-        <div class="widget-chat-media">
-          <img
-            src="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.png')) }}"
-            alt="{{ (message.sender.display_name if message.sender.display_name else 'Default User') }}" width="40"
-            class="card-img">
-        </div>
-        <div class="widget-chat-content">
-          <div>
+<div class="container-fluid">
+  <div class="messenger-content">
+    <div class="messenger-content-body gradPrim">
+      <div class="widget-chat" id="chatbox">
+        <div class="widget-chat-date">TODAY</div>
+        {% for message in messages %}
+        <div class="widget-chat-item">
+          <div class="widget-chat-media">
+            <img src="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.png')) }}" alt="{{ message.sender.display_name if message.sender.display_name else 'Default User' }}" width="40" class="card-img">
           </div>
-          <div class="widget-chat-item">{{ message.sender.display_name or message.sender.username }}</div>
-          <div class="widget-chat-message last">
-            {{ message.content }}
+          <div class="widget-chat-content chatBtn profileBtn" 
+               data-user-id="{{ message.sender.id }}" 
+               data-user-pic="{{ url_for('static', filename=(message.sender.profile_pic if message.sender.profile_pic else 'uploads/default_image.png')) }}" 
+               data-display-name="{{ message.sender.display_name if message.sender.display_name else 'Default User' }}">
+            <div class="widget-chat-item">{{ message.sender.display_name or message.sender.username }}</div>
+            <div class="widget-chat-message last">{{ message.content }}</div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
   </div>
 </div>
+
+
+
 
 <div class="messenger-content-footer gradPrim">
   <div class="input-group input-group-lg position-relative z-3">
@@ -41,6 +42,20 @@
 </div>
 </div>
 </div>
+<div class="modal fade gradPrim" id="actionModal" tabindex="-1" aria-labelledby="actionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header gradPrim">
+              <h5 class="modal-title" id="actionModalLabel">Select Action</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body gradPrim">
+              <button class="btn btn-primary" id="profileBtn">View Profile</button>
+              <button class="btn btn-secondary" id="chatBtn">Chat</button>
+          </div>
+      </div>
+  </div>
+</div>
 
 
 <div class="card-arrow">
@@ -51,6 +66,32 @@
 </div>
 </div>
 </div>  
+<script>
+  // Add event listener to each user element
+  document.querySelectorAll('.user').forEach(function(userElement) {
+      userElement.addEventListener('click', function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          // Get user information from clicked element
+          const userId = event.currentTarget.getAttribute('data-user-id');
+          const userName = event.currentTarget.getAttribute('data-user-name');
+          const userPic = event.currentTarget.getAttribute('data-user-pic');
+
+          // Set modal content
+          document.getElementById('userProfilePic').src = userPic;
+          document.getElementById('userProfileName').textContent = userName;
+
+          // Modify the form action to post to the correct user's profile
+          document.querySelector('#userProfileModal form').action = "/profile/" + userId;
+
+          // Show the modal
+          const userProfileModal = new bootstrap.Modal(document.getElementById('userProfileModal'));
+          userProfileModal.show();
+      });
+  });
+</script>
+
 
 
 <script src="../static/js/socket.js"></script>

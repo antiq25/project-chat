@@ -62,3 +62,5 @@ function sendMessage() {
     document.getElementById('message').value = '';
     scrollBottom();
 }
+
+document.getElementById('message').focus();
